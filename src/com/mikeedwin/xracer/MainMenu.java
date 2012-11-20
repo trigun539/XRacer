@@ -4,7 +4,6 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Resources.Theme;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,14 +27,17 @@ public class MainMenu extends Activity {
         startRaceButton.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
-				startRaceButton.setText("clicked!");
+				// Starting Game
+				Intent startingGame = new Intent(MainMenu.this, Game.class);
+				startActivity(startingGame);
+				
 			}
 		});
         
         settingsButton.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
-				Intent openSettings = new Intent("com.mikeedwin.xracer.SETTINGS");
+				Intent openSettings = new Intent(MainMenu.this, Settings.class);
 				startActivity(openSettings);
 			}
 		});

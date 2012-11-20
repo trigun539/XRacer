@@ -14,7 +14,5 @@ public class Settings extends Activity {
 		
 		super.onCreate(savedInstanceState);
 	}
-	
-	
 
 }
