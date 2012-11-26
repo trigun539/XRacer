@@ -10,26 +10,27 @@ import android.graphics.Rect;
 public class Car {
 	private static final int BMP_ROWS = 4;
 	private static final int BMP_COLUMNS = 3;
-	private int x;
-	private int y;
+	public int x;
+	public int y;
     private int xSpeed;
     private int ySpeed;
     private GameView gameView;
-    private Bitmap bmp;
+    public Bitmap bmp;
     private int currentFrame = 0;
     private int width;
     private int height;
+    
     
     public Car(GameView gameView, Bitmap bmp){
     	this.gameView = gameView;
         this.bmp = bmp;
         this.width = bmp.getWidth() / BMP_COLUMNS;
         this.height = bmp.getHeight() / BMP_ROWS;
-        Random rnd = new Random();
+        /*Random rnd = new Random();
         x = rnd.nextInt(gameView.getWidth() - width);
         y = rnd.nextInt(gameView.getHeight() - height);
         xSpeed = rnd.nextInt(10)-5;
-        ySpeed = rnd.nextInt(10)-5;
+        ySpeed = rnd.nextInt(10)-5;*/
     }
     
     private void update() {
