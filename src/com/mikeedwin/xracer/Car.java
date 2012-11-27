@@ -23,13 +23,14 @@ public class Car {
     
     public Car(Bitmap bmp){
         this.bmp = bmp;
-        this.width = bmp.getWidth() / BMP_COLUMNS;
+        this.width = 34; //bmp.getWidth() / BMP_COLUMNS;
         this.height = bmp.getHeight() / BMP_ROWS;
         this.currentFrame = 0;
         this.srcX = 0;
-        this.srcY = this.height;
-        this.x = 100;
-        this.y = 100;
+        this.srcY = 0;
+        this.x = 10;
+        this.y = 10;
+        this.animationRow = 0;
     }
     
     public void update(){
@@ -39,7 +40,7 @@ public class Car {
     @SuppressLint({ "DrawAllocation", "DrawAllocation", "DrawAllocation" })
     public void onDraw(Canvas canvas){
     	srcX = currentFrame * width;
-        srcY = height;
+        srcY = height * animationRow;
         src = new Rect(srcX, srcY, srcX + width, srcY + height);
         dst = new Rect(x, y, x + width, y + height);
         canvas.drawBitmap(bmp, src, dst, null);
