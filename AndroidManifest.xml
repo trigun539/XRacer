@@ -24,12 +24,13 @@
         
         <activity
             android:name=".Settings"
-            android:label="@string/menu_settings" />
+            android:label="@string/menu_settings"
+            android:screenOrientation="landscape" />
         
          <activity
             android:name=".Game"
             android:label="@string/title_activity_game"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="landscape" />
         
     </application>
     

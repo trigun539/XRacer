@@ -9,6 +9,8 @@ import android.graphics.Rect;
 public class Car {
 	public static final int BMP_ROWS = 1;
 	public static final int BMP_COLUMNS = 3;
+	private int viewWidth;
+    private int viewHeight;
     public Bitmap bmp;
     public int width;
     public int height;
@@ -20,8 +22,9 @@ public class Car {
     public int animationRow;
     public int x;
     public int y;
+    public int turn;  //-10 to 10, -10 is full left, 10 is full right, 0 is straight
     
-    public Car(Bitmap bmp){
+    public Car(Bitmap bmp, int vWidth, int vHeight){
         this.bmp = bmp;
         this.width = 34; //bmp.getWidth() / BMP_COLUMNS;
         this.height = bmp.getHeight() / BMP_ROWS;
@@ -31,6 +34,8 @@ public class Car {
         this.x = 10;
         this.y = 10;
         this.animationRow = 0;
+        this.viewHeight = vHeight;
+        this.viewWidth = vWidth;
     }
     
     public void update(){
