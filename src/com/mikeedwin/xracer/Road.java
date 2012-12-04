@@ -15,7 +15,8 @@ public class Road {
     private int roadwidthFront;
     private int roadwidthHorizon;
     public int hill; //-20 to 20, -20 is full downhill, 20 is full uphill
-    
+    public int road_leftright;  //-30 is a half view left, 30 is a half view right
+    public int road_speed; //0 is stopped, 100 is 100 mph [goes to infinite!]
     
     public Road(int vWidth, int vHeight){
     	this.viewHeight = vHeight;
