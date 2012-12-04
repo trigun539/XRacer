@@ -119,11 +119,13 @@ public class GameView extends SurfaceView implements SensorEventListener {
 	
 	
 	private void movecar() {
-		//racecar.x += racecar.turn/2;
-		// car only changes direction
 		
-		// road moves
 		
+		//move car based on how the road is turned
+		//road.road_leftright -= road.turn/20;
+		
+		//move car based on how it is turned
+		road.road_leftright += racecar.turn/4;
 	}
 	
 	private void adjustroad() {
