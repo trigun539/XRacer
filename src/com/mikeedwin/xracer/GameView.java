@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -24,6 +23,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
     private SensorManager mSensorManager;
     private Sensor mOrientation;
     private Road road;
+    private Sky sky;
     private int viewWidth;
     private int viewHeight;
 	
@@ -69,10 +69,10 @@ public class GameView extends SurfaceView implements SensorEventListener {
         //car = BitmapFactory.decodeResource(getResources(), R.drawable.car);
         
         Bitmap carbitmap = BitmapFactory.decodeResource(getResources(), R.drawable.car);
+        sky = new Sky(this);
         racecar = new Car(carbitmap, viewWidth, viewHeight);
         road = new Road(viewWidth, viewHeight);
-       
-        
+
         start();
 	}
 	
@@ -99,11 +99,6 @@ public class GameView extends SurfaceView implements SensorEventListener {
 		
 	}
 
-
-
-
-
-
 	private void start() {
 		
 		racecar.x = viewWidth/2;
@@ -113,22 +108,17 @@ public class GameView extends SurfaceView implements SensorEventListener {
 	
 	@Override
     protected void onDraw(Canvas canvas) {
-		
 		movecar();
 		adjustroad();
-		
-		
-		
-		canvas.drawColor(Color.BLACK);
+
+		canvas.drawColor(Color.rgb(30, 151, 220));
+		sky.onDraw(canvas);
 		road.onDraw(canvas);
 		racecar.onDraw(canvas);
-		
-		
     }
 	
 	
 	private void movecar() {
-		
 		racecar.x += racecar.turn/2;
 	}
 	

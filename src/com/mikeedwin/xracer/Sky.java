@@ -1,37 +1,31 @@
 package com.mikeedwin.xracer;
 
+import android.annotation.SuppressLint;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 
 public class Sky {
-	private String color;
-	private GameView gameview;
-	private int width;
-	private int height;
-	private Rect background;
-	private Paint backgroundPaint;
-	private Paint cloudPaint;
+	private GameView view;
 	
 	public Sky(GameView gameview) {
-		this.gameview = gameview;
-		this.color = "#123456";
-		this.width = gameview.getWidth() * 2;
-		this.height = gameview.getHeight() / 2;
-		this.backgroundPaint = new Paint();
-		//backgroundPaint.setColor();
-		
-		
+		this.view = gameview;
+	
 	}
 	
 	public void update(){
 		
 	}
 	
+	@SuppressLint("DrawAllocation")
 	public void onDraw(Canvas canvas) {
-		update();
+		//update();
+		//canvas.drawRect(background, backgroundPaint);
 		
-		// draw here...
+		// Sky
+		Paint myPaint = new Paint();
+		myPaint.setColor(Color.rgb(255, 255, 255));
+		canvas.drawRect(0, 0, view.getWidth(), view.getHeight()/2, myPaint);
 	}
 	
 	
