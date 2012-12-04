@@ -24,12 +24,14 @@ public class Sky {
 		
 	}
 	
-	public update(){
+	public void update(){
 		
 	}
 	
-	public onDraw(Canvas canvas) {
+	public void onDraw(Canvas canvas) {
 		update();
+		
+		// draw here...
 	}
 	
 	
