@@ -111,7 +111,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
 		movecar();
 		adjustroad();
 
-		canvas.drawColor(Color.rgb(30, 151, 220));
+		canvas.drawColor(Color.rgb(0, 0, 0));
 		sky.onDraw(canvas);
 		road.onDraw(canvas);
 		racecar.onDraw(canvas);
@@ -119,7 +119,11 @@ public class GameView extends SurfaceView implements SensorEventListener {
 	
 	
 	private void movecar() {
-		racecar.x += racecar.turn/2;
+		//racecar.x += racecar.turn/2;
+		// car only changes direction
+		
+		// road moves
+		
 	}
 	
 	private void adjustroad() {

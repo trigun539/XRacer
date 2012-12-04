@@ -20,11 +20,10 @@ public class Sky {
 	@SuppressLint("DrawAllocation")
 	public void onDraw(Canvas canvas) {
 		//update();
-		//canvas.drawRect(background, backgroundPaint);
 		
 		// Sky
 		Paint myPaint = new Paint();
-		myPaint.setColor(Color.rgb(255, 255, 255));
+		myPaint.setColor(Color.rgb(30, 151, 220));
 		canvas.drawRect(0, 0, view.getWidth(), view.getHeight()/2, myPaint);
 	}
 	
