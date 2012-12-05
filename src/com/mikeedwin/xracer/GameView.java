@@ -1,6 +1,7 @@
 package com.mikeedwin.xracer;
 
 import java.util.Calendar;
+import java.util.Random;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -26,6 +27,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
     private Sky sky;
     private int viewWidth;
     private int viewHeight;
+    private Random rand;
 	
 	public GameView(Context context) {
 		super(context);
@@ -72,6 +74,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
         sky = new Sky(this);
         racecar = new Car(carbitmap, viewWidth, viewHeight);
         road = new Road(viewWidth, viewHeight);
+        rand = new Random();
 
         start();
 	}
@@ -130,10 +133,18 @@ public class GameView extends SurfaceView implements SensorEventListener {
 	
 	private void adjustroad() {
 		
-		Calendar c = Calendar.getInstance(); 
-		int seconds = c.get(Calendar.SECOND);
+		if(road.turn > 50)
+			road.turn = -50;
 		
-		road.turn = (seconds%20 - 10) * 5;  //will set it between -50 and 50 depending on the time
+		if(road.hill > 20)
+			road.hill = -20;
+		
+		road.turn += 1;
+		
+		road.hill += 1;
+		
+		
+		
 	}
 	
 	

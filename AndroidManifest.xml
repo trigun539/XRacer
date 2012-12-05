@@ -30,7 +30,8 @@
          <activity
             android:name=".Game"
             android:label="@string/title_activity_game"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:keepScreenOn="true" />
         
     </application>
     

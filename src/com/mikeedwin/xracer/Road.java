@@ -36,13 +36,14 @@ public class Road {
     public void onDraw(Canvas canvas){
         Paint p = new Paint(Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG);
         Path pth = new Path();
+        Path pth2 = new Path();
         
         //road_leftright = 20;
         int road_lr = (road_leftright * viewWidth / -60);
        
         int ctrWidth = viewWidth/2;
         int horizonHeight = (int)(viewHeight*(((float)hill/100) + .35));
-        roadwidthHorizon = (int)(viewWidth*((float)hill/200 + .3));
+        roadwidthHorizon = (int)(viewWidth*((float)hill/200 + .25));
         
         double bezX_adj1 = Math.abs(turn)*.03 + 2.5;  //2 on straight, 3.5 on full turn
         double bezX_adj2 = Math.abs(turn)*-.03 + 1.5;  //2 on straight, .5 on full turn
@@ -72,7 +73,8 @@ public class Road {
         
         
         //drawing the ground
-        //canvas.drawRect(0, ctrHeight+(hill, right, bottom, p)
+        p.setColor(0xff005900);
+        canvas.drawRect(0, horizonHeight, viewWidth, viewHeight, p);
         
         //drawing the road
         pth.moveTo(roadBR_X,roadBR_Y);
@@ -81,9 +83,36 @@ public class Road {
         pth.lineTo(roadTR_X, roadTR_Y);
         pth.cubicTo(roadTR_X, roadTR_Y, roadRbez_X, roadRbez_Y, roadBR_X,roadBR_Y);
         pth.moveTo(roadBR_X,roadBR_Y);
-        p.setColor(0xffaaaaaa);
+        p.setColor(0xff999999);
         canvas.drawPath(pth,p);
         
+        //drawing the outer road lines
+        pth2.moveTo(roadBL_X,roadBL_Y);
+        pth2.cubicTo(roadBL_X,roadBL_Y, roadLbez_X, roadLbez_Y, roadTL_X,roadTL_Y);
+        pth2.moveTo(roadTR_X, roadTR_Y);
+        pth2.cubicTo(roadTR_X, roadTR_Y, roadRbez_X, roadRbez_Y, roadBR_X,roadBR_Y);
+        p.setColor(0xFFCCCBCC);
+        p.setStyle(Paint.Style.STROKE);
+        p.setStrokeWidth(5);
+        p.setStrokeCap(Paint.Cap.SQUARE);
+        canvas.drawPath(pth2,p);
+        
+    }
+    
+    
+    public void preventBoundaries()  //makes sure internal values don't exceed boundaries
+    {
+    	if(hill < -20)
+    		hill = -20;
+    	
+    	if(hill > 20)
+    		hill = 20;
+    	
+    	if(turn > 50)
+    		turn = 50;
+    	
+    	if(turn < -50)
+    		turn = -50;
     }
     
 }
