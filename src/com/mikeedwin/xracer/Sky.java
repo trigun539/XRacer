@@ -6,10 +6,12 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 public class Sky {
-	private GameView view;
+	private int viewWidth;
+	private int viewHeight;
 	
-	public Sky(GameView gameview) {
-		this.view = gameview;
+	public Sky(int width, int height) {
+		viewWidth = width;
+		viewHeight = height;
 	
 	}
 	
@@ -24,7 +26,8 @@ public class Sky {
 		// Sky
 		Paint myPaint = new Paint();
 		myPaint.setColor(Color.rgb(30, 151, 220));
-		canvas.drawRect(0, 0, view.getWidth(), view.getHeight()/2, myPaint);
+		canvas.drawRect(0, 0, viewWidth, viewHeight/2, myPaint);
+		
 	}
 	
 	

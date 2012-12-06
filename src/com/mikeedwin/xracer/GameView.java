@@ -25,6 +25,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
     private Sensor mOrientation;
     private Road road;
     private Sky sky;
+    private Cloud cloud;
     private int viewWidth;
     private int viewHeight;
     private Random rand;
@@ -71,7 +72,8 @@ public class GameView extends SurfaceView implements SensorEventListener {
         //car = BitmapFactory.decodeResource(getResources(), R.drawable.car);
         
         Bitmap carbitmap = BitmapFactory.decodeResource(getResources(), R.drawable.car);
-        sky = new Sky(this);
+        sky = new Sky(viewWidth, viewHeight);
+        cloud = new Cloud(viewWidth, viewHeight);
         racecar = new Car(carbitmap, viewWidth, viewHeight);
         road = new Road(viewWidth, viewHeight);
         rand = new Random();
@@ -116,6 +118,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
 
 		canvas.drawColor(Color.rgb(0, 0, 0));
 		sky.onDraw(canvas);
+		cloud.onDraw(canvas);
 		road.onDraw(canvas);
 		racecar.onDraw(canvas);
     }
