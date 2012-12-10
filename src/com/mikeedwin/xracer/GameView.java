@@ -1,6 +1,7 @@
 package com.mikeedwin.xracer;
 
-import java.util.Calendar;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import android.content.Context;
@@ -25,10 +26,10 @@ public class GameView extends SurfaceView implements SensorEventListener {
     private Sensor mOrientation;
     private Road road;
     private Sky sky;
-    private Cloud cloud;
     private int viewWidth;
     private int viewHeight;
     private Random rand;
+    private List<Cloud> clouds = new ArrayList<Cloud>();
 	
 	public GameView(Context context) {
 		super(context);
@@ -69,11 +70,16 @@ public class GameView extends SurfaceView implements SensorEventListener {
                }
         });
         
-        //car = BitmapFactory.decodeResource(getResources(), R.drawable.car);
-        
         Bitmap carbitmap = BitmapFactory.decodeResource(getResources(), R.drawable.car);
+
         sky = new Sky(viewWidth, viewHeight);
-        cloud = new Cloud(viewWidth, viewHeight);
+        
+        // Clouds
+        for(int i = 0; i < 20; i++){
+        	Cloud cloud = new Cloud(viewWidth, viewHeight);
+        	clouds.add(cloud);
+        }
+        
         racecar = new Car(carbitmap, viewWidth, viewHeight);
         road = new Road(viewWidth, viewHeight);
         rand = new Random();
@@ -116,17 +122,19 @@ public class GameView extends SurfaceView implements SensorEventListener {
 		movecar();
 		adjustroad();
 
-		canvas.drawColor(Color.rgb(0, 0, 0));
+		canvas.drawColor(Color.rgb(30, 151, 220));
 		sky.onDraw(canvas);
-		cloud.onDraw(canvas);
+
+		for (Cloud cloud : clouds) {
+			cloud.onDraw(canvas);
+    	}
+		
 		road.onDraw(canvas);
 		racecar.onDraw(canvas);
     }
 	
 	
 	private void movecar() {
-		
-		
 		//move car based on how the road is turned
 		//road.road_leftright -= road.turn/20;
 		

@@ -14,7 +14,8 @@ public class Cloud {
 	private int y;
 	private int viewWidth;
 	private int viewHeight;
-	private int xSpeed;
+	private int xSpeed; // Speed of cloud
+	private int scale; 
 	
 	public Cloud(int width, int height) {
 		
@@ -24,7 +25,8 @@ public class Cloud {
 		Random rnd = new Random();
         x = rnd.nextInt(viewWidth);
         y = rnd.nextInt((viewHeight / 2));
-        xSpeed = rnd.nextInt(10) - 5;
+        xSpeed = rnd.nextInt(5) - 2;
+        scale = rnd.nextInt(15);
 	}
 	
 	public void update(){
@@ -37,24 +39,32 @@ public class Cloud {
 	@SuppressLint("DrawAllocation")
 	public void onDraw(Canvas canvas) {
 		update();
-
+		
+		
 		Paint paint = new Paint();
-		paint.setStyle(Paint.Style.STROKE);
-		paint.setStrokeWidth(2);
 		paint.setColor(Color.rgb(255, 255, 255));
-		paint.setStyle(Paint.Style.FILL_AND_STROKE);
+		paint.setStyle(Paint.Style.FILL);
 		
 		Path path = new Path();
-		path.moveTo(10, 5);
-		path.quadTo(10, 10, -5, 5);
-		path.quadTo(-20, 5, -15, -5);
-		path.quadTo(-5, -10, 5, -10);
-		path.quadTo(10, -5, 10, 5);
+		path.moveTo(-20, 0);
+		
+		// Top
+		path.quadTo(0, -20, 20, 0);
+		
+		// Right
+		path.quadTo(50, 5, 30, 10);
+
+		// Bottom
+		path.quadTo(0, 20, -10, 10);
+
+		// left
+		path.quadTo(-40, 20, -20, 0);
+		
 		path.close();
 		path.offset(x, y);
-
-		canvas.drawPath(path, paint);
 		
+		canvas.drawPath(path, paint);
+
 	}
 
 }
