@@ -3,6 +3,8 @@ package com.mikeedwin.xracer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -30,6 +32,9 @@ public class GameView extends SurfaceView implements SensorEventListener {
     private int viewHeight;
     private Random rand;
     private List<Cloud> clouds = new ArrayList<Cloud>();
+    private int speed = 0;  //current speed in mph
+    private int distance = 0;  //total distance travelled
+    private Timer T;
 	
 	public GameView(Context context) {
 		super(context);
@@ -80,6 +85,16 @@ public class GameView extends SurfaceView implements SensorEventListener {
         	clouds.add(cloud);
         }
         
+        T = new Timer();
+        TimerTask task = new TimerTask(){
+        	@Override
+            public void run() {
+                speed++;
+        }};
+        
+        T.scheduleAtFixedRate(task, 1000, 1000);  
+        speed = 20; 
+        
         racecar = new Car(carbitmap, viewWidth, viewHeight);
         road = new Road(viewWidth, viewHeight);
         rand = new Random();
@@ -113,7 +128,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
 	private void start() {
 		
 		racecar.x = viewWidth/2;
-		racecar.y = viewHeight - 80;
+		racecar.y = (viewHeight * 85)/100 - racecar.height/2;
 	}
 	
 	
@@ -140,6 +155,8 @@ public class GameView extends SurfaceView implements SensorEventListener {
 		
 		//move car based on how it is turned
 		road.road_leftright += racecar.turn/4;
+		
+		road.moveCarForward(speed);
 	}
 	
 	private void adjustroad() {
