@@ -16,7 +16,7 @@ public class Sky {
 	}
 	
 	public void update(){
-		
+		// TODO: Add date to night change and vice versa
 	}
 	
 	@SuppressLint("DrawAllocation")
@@ -26,7 +26,7 @@ public class Sky {
 		// Sky
 		Paint myPaint = new Paint();
 		myPaint.setColor(Color.rgb(30, 151, 220));
-		canvas.drawRect(0, 0, viewWidth, viewHeight/2, myPaint);
+		canvas.drawRect(0, 0, viewWidth, viewHeight, myPaint);
 		
 	}
 	

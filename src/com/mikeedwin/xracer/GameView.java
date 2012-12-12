@@ -28,13 +28,16 @@ public class GameView extends SurfaceView implements SensorEventListener {
     private Sensor mOrientation;
     private Road road;
     private Sky sky;
+    private Hud hud;
     private int viewWidth;
     private int viewHeight;
     private Random rand;
     private List<Cloud> clouds = new ArrayList<Cloud>();
     private int speed = 0;  //current speed in mph
     private int distance = 0;  //total distance travelled
+    private int score = 0;  //total score = distance * (5 * floor(speed/250)) can be changed
     private Timer T;
+    private Bitmap speedometerBitmap;
 	
 	public GameView(Context context) {
 		super(context);
@@ -76,6 +79,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
         });
         
         Bitmap carbitmap = BitmapFactory.decodeResource(getResources(), R.drawable.car);
+        speedometerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.speedometer);
 
         sky = new Sky(viewWidth, viewHeight);
         
@@ -93,12 +97,16 @@ public class GameView extends SurfaceView implements SensorEventListener {
         }};
         
         T.scheduleAtFixedRate(task, 1000, 1000);  
-        speed = 20; 
+        speed = 20;
+        score = 0;
         
         racecar = new Car(carbitmap, viewWidth, viewHeight);
         road = new Road(viewWidth, viewHeight);
         rand = new Random();
-
+        
+        // HUD
+        hud = new Hud(viewWidth, viewHeight, speedometerBitmap);
+        
         start();
 	}
 	
@@ -136,6 +144,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
     protected void onDraw(Canvas canvas) {
 		movecar();
 		adjustroad();
+		updateDistSpeedScore();
 
 		canvas.drawColor(Color.rgb(30, 151, 220));
 		sky.onDraw(canvas);
@@ -146,6 +155,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
 		
 		road.onDraw(canvas);
 		racecar.onDraw(canvas);
+		hud.onDraw(canvas, speed, score);
     }
 	
 	
@@ -171,8 +181,16 @@ public class GameView extends SurfaceView implements SensorEventListener {
 		
 		road.hill += 1;
 		
-		
-		
+	}
+	
+	private void updateDistSpeedScore(){
+		// TODO: Increase distance by depending on speed and time.
+		distance++;
+		// TODO: Increase speed depending on how fast we want the game to go.
+		speed++;
+		// TODO: Fix the score counter
+		//score = (int) (distance * (5 * (Math.floor(speed/255))));
+		score = score + 20;
 	}
 	
 	
