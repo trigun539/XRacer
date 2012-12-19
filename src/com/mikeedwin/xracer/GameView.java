@@ -1,6 +1,7 @@
 package com.mikeedwin.xracer;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 import java.util.Timer;
@@ -38,6 +39,8 @@ public class GameView extends SurfaceView implements SensorEventListener {
     private int score = 0;  //total score = distance * (5 * floor(speed/250)) can be changed
     private Timer T;
     private Bitmap speedometerBitmap;
+    private int framecount = 0;  //the number of total frames processed by the game, iterates every time ondraw is called
+    
 	
 	public GameView(Context context) {
 		super(context);
@@ -80,6 +83,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
         
         Bitmap carbitmap = BitmapFactory.decodeResource(getResources(), R.drawable.car);
         speedometerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.speedometer);
+        Bitmap treeBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.tree);
 
         sky = new Sky(viewWidth, viewHeight);
         
@@ -101,7 +105,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
         score = 0;
         
         racecar = new Car(carbitmap, viewWidth, viewHeight);
-        road = new Road(viewWidth, viewHeight);
+        road = new Road(treeBitmap, viewWidth, viewHeight);
         rand = new Random();
         
         // HUD
@@ -153,9 +157,15 @@ public class GameView extends SurfaceView implements SensorEventListener {
 			cloud.onDraw(canvas);
     	}
 		
+		if(framecount%50 == 21)   //creates a tree on the road every 50 frames
+			road.makeTree(true);
+		
 		road.onDraw(canvas);
 		racecar.onDraw(canvas);
 		hud.onDraw(canvas, speed, score);
+		
+		
+		framecount++;
     }
 	
 	

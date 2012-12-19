@@ -1,8 +1,13 @@
 package com.mikeedwin.xracer;
 
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import android.annotation.SuppressLint;
 import android.graphics.AvoidXfermode;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
@@ -10,6 +15,7 @@ import android.graphics.Path;
 import android.graphics.PathMeasure;
 
 public class Road {
+	private List<Tree> treeList;
 	private int viewWidth;
     private int viewHeight;
     public Paint paint;
@@ -22,6 +28,7 @@ public class Road {
     private Paint p;
     private Path pth, pth2, pth3, pth4, pth5;
     private PathMeasure measure;
+    private Bitmap treeBitmap;
     
     private int road_lr, ctrWidth, horizonHeight;
     private double bezX_adj1, bezX_adj2, bezY_adj1, bezY_adj2;
@@ -37,9 +44,12 @@ public class Road {
     private int roadline, roadlineGap, roadOffset;
     
     
-    public Road(int vWidth, int vHeight){
+    public Road(Bitmap _treeBitmap, int vWidth, int vHeight){
     	this.viewHeight = vHeight;
         this.viewWidth = vWidth;
+        this.treeBitmap = _treeBitmap;
+        
+        treeList = new ArrayList<Tree>();
         
         roadwidthFront = (int)(viewWidth*.7);
         roadwidthHorizon = (int)(viewWidth*.3);
@@ -47,6 +57,9 @@ public class Road {
         roadline = viewHeight/9;
         roadlineGap = viewHeight/9;
         roadOffset = 0;
+        
+        
+        //trees[0] = new Tree(treeBitmap, viewWidth, viewHeight);
     }
     
     public void update(){
@@ -183,13 +196,47 @@ public class Road {
         
     }
     
+    private void moveAndDrawTrees(Canvas canvas)
+    {
+    	measure = new PathMeasure();
+    	measure.setPath(pth4, false);
+        float[] xy = new float[2];
+        float pathlength = measure.getLength();
+        
+        Iterator<Tree> it = treeList.iterator();
+        
+        while (it.hasNext()) {
+        	Tree tree = it.next();
+        	
+        	if(!tree.distanceSet)  //if tree distance not initialized yet, then initalize it
+        	{
+        		
+        		tree.distance = (int)(pathlength);
+        		tree.distanceSet = true;
+        	}
+        	
+        	tree.distance -= 4;
+        	tree.offset = (int)(pathlength - tree.distance);
+        	
+        	measure.getPosTan(tree.offset, xy, null);
+        	tree.x = (int)xy[0];
+        	tree.y = (int)xy[1];
+        	tree.distance = (int)(pathlength - tree.offset);
+        	if(tree.distance <= 0)
+        		it.remove();
+        	
+        	tree.offset += 4;
+        	
+        	
+			tree.onDraw(canvas);
+        }
+    	
+    }
+    
     
     @SuppressLint({ "DrawAllocation", "DrawAllocation", "DrawAllocation" })
     public void onDraw(Canvas canvas){
         p = new Paint(Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG);
-        measure = new PathMeasure();
-        
-        
         
         
         calculateNewRoadVars();
@@ -198,35 +245,10 @@ public class Road {
         drawOuterRoadLines(canvas);
         drawInnerRoadLines(canvas);
         drawTreeLines(canvas);
+        moveAndDrawTrees(canvas);
         
         
         
-        //------testing \/, will remove later
-        float[] xy = new float[2];
-        float[] ten = new float[2];
-        
-        measure.setPath(pth4, false);
-        
-        measure.getPosTan(80, xy, null);
-        
-        
-        pth = new Path();
-    	pth.moveTo(xy[0]-5,xy[1]-5);
-        pth.lineTo(xy[0]+5,xy[1]+5);
-        
-        measure.setPath(pth5, false);
-        
-        measure.getPosTan(80, xy, null);
-        
-        pth.moveTo(xy[0]-5,xy[1]-5);
-        pth.lineTo(xy[0]+5,xy[1]+5);
-        
-        p.setStyle(Paint.Style.STROKE);
-        p.setStrokeWidth(5);
-        p.setColor(0xff111111);
-        canvas.drawPath(pth,p);
-        
-        //------testing /\  will remove later
     }
     
     public void moveCarForward(int speed)  //moves the car forward [actually moves road] a certain amount depending on car speed
@@ -248,6 +270,11 @@ public class Road {
     	
     	if(turn < -50)
     		turn = -50;
+    }
+    
+    public void makeTree(boolean isLeft)
+    {
+    	treeList.add(new Tree(treeBitmap, viewWidth, viewHeight));
     }
     
 }
