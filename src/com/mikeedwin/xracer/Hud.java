@@ -47,8 +47,10 @@ public class Hud {
 		
 		// SPEDOMETER
 		canvas.drawBitmap(speedometer, viewWidth - 180, viewHeight - 230, null);
+		//canvas.drawBitmap(speedometer, new Rect(0,0,100,100), new Rect(0,0,130,130), null);
 		
 		// TODO: Draw Speedometer needle
+		
 		
 		
 	}
