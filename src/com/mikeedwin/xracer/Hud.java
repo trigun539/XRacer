@@ -46,11 +46,21 @@ public class Hud {
 		canvas.drawText(Integer.toString(score), 10, 110, textPaint2);
 		
 		// SPEDOMETER
-		canvas.drawBitmap(speedometer, viewWidth - 180, viewHeight - 230, null);
-		//canvas.drawBitmap(speedometer, new Rect(0,0,100,100), new Rect(0,0,130,130), null);
+		canvas.drawBitmap(speedometer, viewWidth - (speedometer.getWidth() + 10), viewHeight - (speedometer.getHeight() + 60) , null);
+		
+		int speedometerCenterX = viewWidth - (speedometer.getWidth() + 18)/2;
+		int speedometerCenterY = viewHeight - (speedometer.getHeight() + 120)/2;
 		
 		// TODO: Draw Speedometer needle
 		
+		// WHEN SPEED IS 0
+		int zeroReadingX = speedometerCenterX - 40;
+		int zeroReadingY = speedometerCenterY + 35;
+		
+		Paint needlePaint = new Paint();
+		needlePaint.setColor(Color.rgb(7, 155, 247));
+		needlePaint.setStrokeWidth(5);
+		canvas.drawLine(zeroReadingX, zeroReadingY, speedometerCenterX, speedometerCenterY, needlePaint);
 		
 		
 	}
