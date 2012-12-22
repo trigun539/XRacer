@@ -43,7 +43,8 @@ public class Tree {
 		int sizer = treeSize();
 		
 		src = new Rect(0, 0, 256, 256);
-		dst = new Rect((int)(x-sizer*.35), (int)(y-sizer*.65), (int)(x+sizer-sizer*.35), (int)(y+sizer-sizer*.65));
+		//dst = new Rect((int)(x-sizer*.35), (int)(y-sizer*.65), (int)(x+sizer-sizer*.35), (int)(y+sizer-sizer*.65));
+		dst = new Rect((int)(x-sizer*.5), (int)(y-sizer*1), (int)(x+sizer-sizer*.5), (int)(y+sizer-sizer*1));
 		canvas.drawBitmap(treeBitmap, src, dst, null);
 
 	}

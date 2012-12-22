@@ -29,6 +29,7 @@ public class Road {
     private Path pth, pth2, pth3, pth4, pth5;
     private PathMeasure measure;
     private Bitmap treeBitmap;
+    private int currentSpeed, offsetChange;
     
     private int road_lr, ctrWidth, horizonHeight;
     private double bezX_adj1, bezX_adj2, bezY_adj1, bezY_adj2;
@@ -225,6 +226,12 @@ public class Road {
         	if(tree.distance <= 0)
         		it.remove();
         	
+        	
+        	offsetChange = this.currentSpeed / 16;
+        	
+        	if(tree.distance < 200)
+        		offsetChange = (int)((this.currentSpeed / 16) * (1+((tree.distance-200)*-.0035)));
+        	
         	tree.offset += 4;
         	
         	
@@ -254,7 +261,7 @@ public class Road {
     public void moveCarForward(int speed)  //moves the car forward [actually moves road] a certain amount depending on car speed
     {
     	roadOffset += speed/4;
-    
+    	currentSpeed = speed;
     }
     	
     public void preventBoundaries()  //makes sure internal values don't exceed boundaries
