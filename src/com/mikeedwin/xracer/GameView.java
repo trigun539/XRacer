@@ -16,6 +16,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -40,7 +41,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
     private Timer T;
     private Bitmap speedometerBitmap;
     private int framecount = 0;  //the number of total frames processed by the game, iterates every time ondraw is called
-    
+    private Timer mainTimer;
 	
 	public GameView(Context context) {
 		super(context);
@@ -97,11 +98,11 @@ public class GameView extends SurfaceView implements SensorEventListener {
         TimerTask task = new TimerTask(){
         	@Override
             public void run() {
-                speed++;
+                //speed++;
         }};
         
         T.scheduleAtFixedRate(task, 1000, 1000);  
-        speed = 20;
+        speed = 0;
         score = 0;
         
         racecar = new Car(carbitmap, viewWidth, viewHeight);
@@ -111,10 +112,29 @@ public class GameView extends SurfaceView implements SensorEventListener {
         // HUD
         hud = new Hud(viewWidth, viewHeight, speedometerBitmap);
         
+        // Timer
+        mainTimer = new Timer();
+        
         start();
 	}
 	
 	
+
+	@Override
+	protected void onAttachedToWindow() {
+		super.onAttachedToWindow();
+		mainTimer = new Timer();
+		//mainTimer.schedule(new UpdateTask(new Handler(), this), 0, 1000);
+	}
+
+
+
+	@Override
+	protected void onDetachedFromWindow() {
+		super.onDetachedFromWindow();
+		mainTimer.cancel();
+		mainTimer.purge();
+	}
 
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 		// TODO Auto-generated method stub
@@ -122,23 +142,19 @@ public class GameView extends SurfaceView implements SensorEventListener {
 	}
 
 	public void onSensorChanged(SensorEvent event) {
-		
 		racecar.x += 0;
-		
-		int tilt = (int)event.values[1];
 
+		int tilt = (int)event.values[1];
+		
 		if(tilt > 10)
 			tilt = 10;
-			
 		else if(tilt < -10)
 			tilt = -10;
 		
 		racecar.turn = -tilt;
-		
 	}
 
 	private void start() {
-		
 		racecar.x = viewWidth/2;
 		racecar.y = (viewHeight * 85)/100 - racecar.height/2;
 	}
@@ -188,9 +204,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
 			road.hill = -20;
 		
 		road.turn += 1;
-		
 		road.hill += 1;
-		
 	}
 	
 	private void updateDistSpeedScore(){
@@ -203,5 +217,35 @@ public class GameView extends SurfaceView implements SensorEventListener {
 		score = score + 20;
 	}
 	
+	// FUNCTIONS THAT UPDATE SPEED AND DISTANCE 
+	
+	public void updateSpeedDistScore(){
+		// Update Speed
+		
+		// Update Distance
+		
+		// Update Score
+	}
+	
+	private class UpdateTask extends TimerTask {
+		Handler handler;
+		MainActivity ref;
+		
+		public UpdateTask (Handler handler, MainActivity ref){
+			super();
+			this.handler = handler;
+			this.ref = ref;
+		}
+		
+		@Override
+		public void run() {
+			handler.post(new Runnable() {
+				public void run() {
+					ref.update();
+				}
+			});
+		}
+		
+	}
 	
 }
