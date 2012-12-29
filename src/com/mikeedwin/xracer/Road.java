@@ -17,6 +17,7 @@ import android.graphics.PathMeasure;
 public class Road {
 	private List<Tree> treeList;
 	private int viewWidth;
+	private Boolean blurMode = false;
     private int viewHeight;
     public Paint paint;
     public Path path;
@@ -185,6 +186,35 @@ public class Road {
         canvas.drawPath(pth3,p);
     }
     
+    private void drawInnerRoadLinesBlurMode(Canvas canvas)
+    {
+    	pth3 = new Path();
+    	pth3.moveTo(leftLineBot_X,leftLineBot_Y);
+        pth3.cubicTo(leftLineBot_X,leftLineBot_Y, leftLineBez_X, leftLineBez_Y, leftLineTop_X,leftLineTop_Y);
+        pth3.moveTo(rightLineBot_X,rightLineBot_Y);
+        pth3.cubicTo(rightLineBot_X,rightLineBot_Y, rightLineBez_X, rightLineBez_Y, rightLineTop_X, rightLineTop_Y);
+        p.setColor(0xCCCCCBCC);
+        p.setStyle(Paint.Style.STROKE);
+        p.setStrokeWidth(5);
+        p.setStrokeCap(Paint.Cap.SQUARE);
+        p.setPathEffect(new DashPathEffect(new float[] {roadline,roadlineGap}, roadOffset));
+        canvas.drawPath(pth3,p);
+        
+        pth3 = new Path();
+    	pth3.moveTo(leftLineBot_X,leftLineBot_Y);
+        pth3.cubicTo(leftLineBot_X,leftLineBot_Y, leftLineBez_X, leftLineBez_Y, leftLineTop_X,leftLineTop_Y);
+        pth3.moveTo(rightLineBot_X,rightLineBot_Y);
+        pth3.cubicTo(rightLineBot_X,rightLineBot_Y, rightLineBez_X, rightLineBez_Y, rightLineTop_X, rightLineTop_Y);
+        p.setColor(0x44CCCBCC);
+        p.setStyle(Paint.Style.STROKE);
+        p.setStrokeWidth(5);
+        p.setStrokeCap(Paint.Cap.SQUARE);
+        p.setPathEffect(null);
+        canvas.drawPath(pth3,p);
+    }
+    
+    
+    
     private void drawTreeLines(Canvas canvas)
     {
     	pth4 = new Path();
@@ -250,17 +280,29 @@ public class Road {
         drawGround(canvas);
         drawRoadBG(canvas);
         drawOuterRoadLines(canvas);
-        drawInnerRoadLines(canvas);
+        
+        if(!blurMode)
+        	drawInnerRoadLines(canvas);
+        else
+        	drawInnerRoadLinesBlurMode(canvas);
+        
         drawTreeLines(canvas);
         moveAndDrawTrees(canvas);
-        
         
         
     }
     
     public void moveCarForward(int speed)  //moves the car forward [actually moves road] a certain amount depending on car speed
     {
-    	roadOffset += speed/4;
+    	if((speed) > (roadline*5.2))  //if you are going very fast, turn on road blur mode
+    	{
+    		blurMode = true;
+    		roadOffset += roadline*1.3;
+    	}
+    	
+    	else
+    		roadOffset += speed/4;
+    	
     	currentSpeed = speed;
     }
     	
