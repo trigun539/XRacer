@@ -20,7 +20,7 @@ public class Road {
     private int viewHeight;
     public Paint paint;
     public Path path;
-    public int turn = 0;  //the turn of the road, -50 is hard left turn, 50 is hard right turn, 0 is straight
+    public float turn = 0;  //the turn of the road, -50 is hard left turn, 50 is hard right turn, 0 is straight
     private int roadwidthFront;
     private int roadwidthHorizon;
     public int hill = 0; //-20 to 20, -20 is full downhill, 20 is full uphill
@@ -32,15 +32,15 @@ public class Road {
     private int currentSpeed, offsetChange;
     
     private int road_lr, ctrWidth, horizonHeight;
-    private double bezX_adj1, bezX_adj2, bezY_adj1, bezY_adj2;
-    private int roadBL_X, roadBL_Y, roadTL_X, roadTL_Y, roadLbez_X, roadLbez_Y;
-    private int roadBR_X, roadBR_Y, roadTR_X, roadTR_Y, roadRbez_X, roadRbez_Y;
+    private float bezX_adj1, bezX_adj2, bezY_adj1, bezY_adj2;
+    private float roadBL_X, roadBL_Y, roadTL_X, roadTL_Y, roadLbez_X, roadLbez_Y;
+    private float roadBR_X, roadBR_Y, roadTR_X, roadTR_Y, roadRbez_X, roadRbez_Y;
     
-    private int leftLineBot_X, leftLineBot_Y, leftLineBez_X, leftLineBez_Y, leftLineTop_X, leftLineTop_Y;
-    private int rightLineBot_X, rightLineBot_Y, rightLineBez_X, rightLineBez_Y, rightLineTop_X, rightLineTop_Y;
+    private float leftLineBot_X, leftLineBot_Y, leftLineBez_X, leftLineBez_Y, leftLineTop_X, leftLineTop_Y;
+    private float rightLineBot_X, rightLineBot_Y, rightLineBez_X, rightLineBez_Y, rightLineTop_X, rightLineTop_Y;
     
-    private int leftTreeLineBot_X, leftTreeLineBot_Y, leftTreeLineBez_X, leftTreeLineBez_Y, leftTreeLineTop_X, leftTreeLineTop_Y;
-    private int rightTreeLineBot_X, rightTreeLineBot_Y, rightTreeLineBez_X, rightTreeLineBez_Y, rightTreeLineTop_X, rightTreeLineTop_Y;
+    private float leftTreeLineBot_X, leftTreeLineBot_Y, leftTreeLineBez_X, leftTreeLineBez_Y, leftTreeLineTop_X, leftTreeLineTop_Y;
+    private float rightTreeLineBot_X, rightTreeLineBot_Y, rightTreeLineBez_X, rightTreeLineBez_Y, rightTreeLineTop_X, rightTreeLineTop_Y;
     
     private int roadline, roadlineGap, roadOffset;
     
@@ -84,11 +84,11 @@ public class Road {
         roadwidthHorizon = (int)(viewWidth*((float)hill/200 + .25));
         
         //bezier modifier variables, depending on turn strength
-        bezX_adj1 = Math.abs(turn)*.03 + 2.5;  //2 on straight, 3.5 on full turn
-        bezX_adj2 = Math.abs(turn)*-.03 + 1.5;  //2 on straight, .5 on full turn
+        bezX_adj1 = (float)(Math.abs(turn)*.03 + 2.5);  //2 on straight, 3.5 on full turn
+        bezX_adj2 = (float)(Math.abs(turn)*-.03 + 1.5);  //2 on straight, .5 on full turn
         
-        bezY_adj1 = Math.abs(turn)*-.05 + 2.5;  //3 on straight, .5 on full turn
-        bezY_adj2 = Math.abs(turn)*.05 + 3.5;  //3 on straight, 5 on full turn
+        bezY_adj1 = (float)(Math.abs(turn)*-.05 + 2.5);  //3 on straight, .5 on full turn
+        bezY_adj2 = (float)(Math.abs(turn)*.05 + 3.5);  //3 on straight, 5 on full turn
         
         //--left outer road line
         roadBL_X = ctrWidth-roadwidthFront/2 + road_lr;
@@ -97,8 +97,8 @@ public class Road {
         roadTL_X = ctrWidth + ((turn * viewWidth) /40) - roadwidthHorizon/2 + road_lr/3;
         roadTL_Y = horizonHeight;
         
-        roadLbez_X = ((int)(roadBL_X*bezX_adj1)+(int)(roadTL_X*bezX_adj2)) / 4;
-        roadLbez_Y = ((int)(roadBL_Y*bezY_adj1)+(int)(roadTL_Y*bezY_adj2)) / 6;
+        roadLbez_X = ((roadBL_X*bezX_adj1)+(int)(roadTL_X*bezX_adj2)) / 4;
+        roadLbez_Y = ((roadBL_Y*bezY_adj1)+(int)(roadTL_Y*bezY_adj2)) / 6;
 
         //--right outer road line
         roadBR_X = ctrWidth+roadwidthFront/2 + road_lr;
@@ -107,8 +107,8 @@ public class Road {
         roadTR_X = ctrWidth + ((turn * viewWidth) /40) + roadwidthHorizon/2 + road_lr/3;
         roadTR_Y = horizonHeight;
 
-        roadRbez_X = ((int)(roadBR_X*bezX_adj1)+(int)(roadTR_X*bezX_adj2)) / 4;  //3-1
-        roadRbez_Y = ((int)(roadBR_Y*bezY_adj1)+(int)(roadTR_Y*bezY_adj2)) / 6;  //1-5
+        roadRbez_X = ((roadBR_X*bezX_adj1)+(int)(roadTR_X*bezX_adj2)) / 4;  //3-1
+        roadRbez_Y = ((roadBR_Y*bezY_adj1)+(int)(roadTR_Y*bezY_adj2)) / 6;  //1-5
         
         
         //----------inner road lines

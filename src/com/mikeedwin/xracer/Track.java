@@ -18,7 +18,7 @@ public class Track
 	private void createTestTrack1()
 	{
 		trackPoints.add(new TrackPoint(0, 0, 0));
-		trackPoints.add(new TrackPoint(1, 10, 0));
+		trackPoints.add(new TrackPoint(1, 10, -8));
 		trackPoints.add(new TrackPoint(2, 5, 40));
 		trackPoints.add(new TrackPoint(2.5, 5, 40));
 		trackPoints.add(new TrackPoint(3.5, 0, 0));
@@ -36,9 +36,9 @@ public class Track
 		
 	}
 	
-	public int getTurnValue(float distanceValue)
+	public float getTurnValue(float distanceValue)
 	{
-		double mileValue = distanceValue/5280;
+		double mileValue = (distanceValue/5280)%trackDistance;
 		
 		for(int i=0; i<trackPoints.size(); i++)
 		{
@@ -47,6 +47,7 @@ public class Track
 			if(mileValue == TP.mileVal)
 				return TP.turnVal;
 			
+			
 			else if(mileValue < TP.mileVal)  //this is the first track point you havent reached yet
 			{
 				TrackPoint TP_Prev = trackPoints.get(i-1);
@@ -54,7 +55,7 @@ public class Track
 				double mileDiff = TP.mileVal - TP_Prev.mileVal;
 				double mileAlleg = (mileValue - TP_Prev.mileVal)/mileDiff;  //from 0 to 1 based on how close to each track point
 				
-				int returner = (int)((TP_Prev.turnVal*mileAlleg)+(TP.turnVal*(1-mileAlleg)));
+				float returner = (float)((TP_Prev.turnVal*(1-mileAlleg))+(TP.turnVal*mileAlleg));
 				
 				return returner;
 				
