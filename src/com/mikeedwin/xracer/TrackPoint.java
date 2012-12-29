@@ -3,14 +3,14 @@ package com.mikeedwin.xracer;
 
 public class TrackPoint
 {
-	public double clockTime;
+	public double mileVal;
 	public int hillVal;
 	public int turnVal;
 	
 	
-	public TrackPoint(double clock, int hill, int turn)
+	public TrackPoint(double mile, int hill, int turn)
 	{
-		this.clockTime = clock;
+		this.mileVal = mile;
 		this.hillVal = hill;
 		this.turnVal = turn;
 		
