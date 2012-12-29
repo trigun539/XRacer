@@ -10,9 +10,9 @@ public class TrackPoint
 	
 	public TrackPoint(double mile, int hill, int turn)
 	{
-		this.mileVal = mile;
-		this.hillVal = hill;
-		this.turnVal = turn;
+		//this.mileVal = mile;
+		//this.hillVal = hill;
+		//this.turnVal = turn;
 		
 	}
 	

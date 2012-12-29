@@ -1,18 +1,16 @@
 package com.mikeedwin.xracer;
 
-import java.util.List;
+import java.util.ArrayList;
 
 
 
 public class Track 
 {
-	private List<TrackPoint> trackPoints;
+	private ArrayList<TrackPoint> trackPoints = new ArrayList<TrackPoint>();
 	private int trackDistance;  //number of miles of the track, loops after this
 	
 	
 	public Track() {
-		
-		
 		createTestTrack1();
 		
 	}

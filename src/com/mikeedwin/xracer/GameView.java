@@ -42,7 +42,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
     private Timer T;
     private Bitmap speedometerBitmap;
     private int framecount = 0;  //the number of total frames processed by the game, iterates every time ondraw is called
-    
+    private Track track;
     
     // TEST TIMER
     private RefreshHandler mRedrawHandler = new RefreshHandler();
@@ -113,6 +113,9 @@ public class GameView extends SurfaceView implements SensorEventListener {
         road = new Road(treeBitmap, viewWidth, viewHeight);
         rand = new Random();
         
+        //track
+        track = new Track();
+        
         // HUD
         hud = new Hud(viewWidth, viewHeight, speedometerBitmap);
        
@@ -182,14 +185,11 @@ public class GameView extends SurfaceView implements SensorEventListener {
 	
 	private void adjustroad() {
 		
-		if(road.turn > 50)
-			road.turn = -50;
 		
-		if(road.hill > 20)
-			road.hill = -20;
+		if(road.hill > 13)
+			road.hill = -13;
 		
-		road.turn += 1;
-		road.hill += 1;
+		road.turn = track.getTurnValue(distance);
 	}
 	
 	// TIMER 
