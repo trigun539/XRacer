@@ -17,6 +17,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Handler;
+import android.os.Message;
 import android.util.DisplayMetrics;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -35,14 +36,17 @@ public class GameView extends SurfaceView implements SensorEventListener {
     private int viewHeight;
     private Random rand;
     private List<Cloud> clouds = new ArrayList<Cloud>();
-    private int speed = 0;  //current speed in mph
-    private int distance = 0;  //total distance travelled
+    private int speed = 0;  // Current speed in mph
+    private int distance = 0;  // Total distance travelled
     private int score = 0;  //total score = distance * (5 * floor(speed/250)) can be changed
     private Timer T;
     private Bitmap speedometerBitmap;
     private int framecount = 0;  //the number of total frames processed by the game, iterates every time ondraw is called
-    private Timer mainTimer;
-	
+    
+    
+    // TEST TIMER
+    private RefreshHandler mRedrawHandler = new RefreshHandler();
+    
 	public GameView(Context context) {
 		super(context);
 		gameLoopThread = new GameLoopThread(this);
@@ -111,29 +115,10 @@ public class GameView extends SurfaceView implements SensorEventListener {
         
         // HUD
         hud = new Hud(viewWidth, viewHeight, speedometerBitmap);
-        
-        // Timer
-        mainTimer = new Timer();
-        
+       
         start();
-	}
-	
-	
-
-	@Override
-	protected void onAttachedToWindow() {
-		super.onAttachedToWindow();
-		mainTimer = new Timer();
-		//mainTimer.schedule(new UpdateTask(new Handler(), this), 0, 1000);
-	}
-
-
-
-	@Override
-	protected void onDetachedFromWindow() {
-		super.onDetachedFromWindow();
-		mainTimer.cancel();
-		mainTimer.purge();
+        
+        updateUI();
 	}
 
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -207,7 +192,32 @@ public class GameView extends SurfaceView implements SensorEventListener {
 		road.hill += 1;
 	}
 	
-	private void updateDistSpeedScore(){
+	// TIMER 
+	
+  class RefreshHandler extends Handler {
+    @Override
+    public void handleMessage(Message msg) {
+      GameView.this.updateUI();
+    }
+
+    public void sleep(long delayMillis) {
+      this.removeMessages(0);
+      sendMessageDelayed(obtainMessage(0), delayMillis);
+    }
+  };
+
+  private void updateUI(){
+    int currentInt = framecount + 10;
+    if(currentInt <= 100){
+      mRedrawHandler.sleep(1000);
+      
+      // Update variables here
+      updateDistSpeedScore();
+      
+    }
+  }
+  
+  private void updateDistSpeedScore(){
 		// TODO: Increase distance by depending on speed and time.
 		distance++;
 		// TODO: Increase speed depending on how fast we want the game to go.
@@ -226,26 +236,6 @@ public class GameView extends SurfaceView implements SensorEventListener {
 		
 		// Update Score
 	}
-	
-	private class UpdateTask extends TimerTask {
-		Handler handler;
-		MainActivity ref;
-		
-		public UpdateTask (Handler handler, MainActivity ref){
-			super();
-			this.handler = handler;
-			this.ref = ref;
-		}
-		
-		@Override
-		public void run() {
-			handler.post(new Runnable() {
-				public void run() {
-					ref.update();
-				}
-			});
-		}
-		
-	}
+  
 	
 }
