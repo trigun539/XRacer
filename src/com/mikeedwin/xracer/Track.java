@@ -10,14 +10,38 @@ public class Track
 	private int trackDistance;  //number of miles of the track, loops after this
 	
 	public float turnVal = 0;
-	public int hillVal = 0;
+	public float hillVal = 0;
 	public float nextTurnVal = 0;
 	public float nextHillVal = 0;
 	public float nextTurnDist = 0;
 	
 	public Track() {
-		createTestTrack1();
+		generateRandomTrack(20);
+		//createTestTrack1();
+	}
+	
+	private void generateRandomTrack(int TrackPoints)  //generates a random track of X number of track points, then loops
+	{
+		double dist = 0;
+		int turn = 0;
+		int hill = 0;
 		
+		trackPoints.add(new TrackPoint(dist, turn, hill));  //the track starts with everything at zero
+		
+		for(int i=0; i<TrackPoints-1; i++)
+		{
+			dist += (Math.random() * 1.5)+.2;   //.2 to 1.7
+			turn = (int)((Math.random() * 100)-50);   //-50 to 50
+			hill = (int)((Math.random() * 30)-15);    //-15 to 15
+			
+			trackPoints.add(new TrackPoint(dist, hill, turn));
+		}
+		
+		dist = Math.ceil(dist);
+		
+		trackPoints.add(new TrackPoint(dist, 0, 0));   //last track point is 0,0 to match the first [for looping]
+		
+		trackDistance = (int)dist;
 	}
 	
 	private void createTestTrack1()
@@ -35,10 +59,10 @@ public class Track
 	}
 	
 	
-	public void setValues(int distanceValue)
+	public int setValues(float distanceValue)
 	{
-		double mileValue = (distanceValue/5280)%trackDistance;
-		
+		double mileValue = (distanceValue/5280)%(trackDistance);
+		 
 		for(int i=0; i<trackPoints.size(); i++)
 		{
 			TrackPoint TP = trackPoints.get(i);
@@ -47,11 +71,11 @@ public class Track
 			{
 				this.turnVal = TP.turnVal;
 				this.hillVal = TP.hillVal;
-				return;
+				return 1;
 			}
 			
 			
-			else if(mileValue < TP.mileVal)  //this is the first track point you havent reached yet
+			if(mileValue < TP.mileVal)  //this is the first track point you havent reached yet
 			{
 				TrackPoint TP_Prev = trackPoints.get(i-1);
 				
@@ -59,14 +83,17 @@ public class Track
 				double mileAlleg = (mileValue - TP_Prev.mileVal)/mileDiff;  //from 0 to 1 based on how close to each track point
 				
 				this.turnVal = (float)((TP_Prev.turnVal*(1-mileAlleg))+(TP.turnVal*mileAlleg));
-				this.hillVal = (int)((TP_Prev.hillVal*(1-mileAlleg))+(TP.hillVal*mileAlleg));
+				this.hillVal = (float)((TP_Prev.hillVal*(1-mileAlleg))+(TP.hillVal*mileAlleg));
+				this.nextHillVal = TP.hillVal;
+				this.nextTurnVal = TP.turnVal;
+				this.nextTurnDist = (float)(TP.mileVal - mileValue);
 				
-				return;
+				return 1;
 				
 			}
 		}
 		
-		return;  //returns if the loop fails to get a return [it shouldn't ever get here if it works]
+		return 0;  //returns if the loop fails to get a return [it shouldn't ever get here if it works]
 	}
 	
 

@@ -22,9 +22,14 @@ public class Road {
     public Paint paint;
     public Path path;
     public float turn = 0;  //the turn of the road, -50 is hard left turn, 50 is hard right turn, 0 is straight
+    public float nextTurn = 0;  //the next track point's turn
+    public float nextTurnDist = 0;  //the distance to the next track point
+    
+    public float hill = 0; //-20 to 20, -20 is full downhill, 20 is full uphill
+    public float nextHill = 0;  //the next track point's hill
+    
     private int roadwidthFront;
     private int roadwidthHorizon;
-    public int hill = 0; //-20 to 20, -20 is full downhill, 20 is full uphill
     public int road_leftright = 0;  //-30 is a half view left, 30 is a half view right
     private Paint p;
     private Path pth, pth2, pth3, pth4, pth5;

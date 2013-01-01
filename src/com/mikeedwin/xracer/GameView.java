@@ -205,6 +205,9 @@ public class GameView extends SurfaceView implements SensorEventListener {
 		
 		road.turn = track.turnVal;
 		road.hill = track.hillVal;
+		road.nextHill = track.nextHillVal;
+		road.nextTurn = track.nextTurnVal;
+		road.nextTurnDist = track.nextTurnDist;
 	}
 	
 	// TIMER 
@@ -234,7 +237,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
   
   private void updateDistSpeedScore(){
 		// TODO: Increase distance by depending on speed and time.
-		distance++;
+		distance+= 50;
 		// TODO: Increase speed depending on how fast we want the game to go.
 		speed++;
 		// TODO: Fix the score counter
