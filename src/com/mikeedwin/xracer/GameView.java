@@ -43,6 +43,9 @@ public class GameView extends SurfaceView implements SensorEventListener {
     private Bitmap speedometerBitmap;
     private int framecount = 0;  //the number of total frames processed by the game, iterates every time ondraw is called
     private Track track;
+    private Bitmap bmpBike;
+    private Bike bike;
+    private int turn;
     
     // TEST TIMER
     private RefreshHandler mRedrawHandler = new RefreshHandler();
@@ -89,6 +92,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
         Bitmap carbitmap = BitmapFactory.decodeResource(getResources(), R.drawable.car);
         speedometerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.speedometer);
         Bitmap treeBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.tree);
+        Bitmap bmpBike = BitmapFactory.decodeResource(getResources(), R.drawable.bike);
 
         sky = new Sky(viewWidth, viewHeight);
         
@@ -116,6 +120,10 @@ public class GameView extends SurfaceView implements SensorEventListener {
         //track
         track = new Track();
         
+        // Bike
+        
+        bike = new Bike(bmpBike, viewWidth, viewHeight);
+        
         // HUD
         hud = new Hud(viewWidth, viewHeight, speedometerBitmap);
        
@@ -133,11 +141,13 @@ public class GameView extends SurfaceView implements SensorEventListener {
 		racecar.x += 0;
 
 		int tilt = (int)event.values[1];
+		turn = (int) event.values[1];
 		
 		if(tilt > 10)
 			tilt = 10;
 		else if(tilt < -10)
 			tilt = -10;
+		
 		
 		racecar.turn = -tilt;
 	}
@@ -166,6 +176,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
 		
 		road.onDraw(canvas);
 		racecar.onDraw(canvas);
+		bike.onDraw(canvas, turn);
 		hud.onDraw(canvas, speed, score);
 		
 		
