@@ -9,6 +9,11 @@ public class Track
 	private ArrayList<TrackPoint> trackPoints = new ArrayList<TrackPoint>();
 	private int trackDistance;  //number of miles of the track, loops after this
 	
+	public float turnVal = 0;
+	public int hillVal = 0;
+	public float nextTurnVal = 0;
+	public float nextHillVal = 0;
+	public float nextTurnDist = 0;
 	
 	public Track() {
 		createTestTrack1();
@@ -29,14 +34,8 @@ public class Track
 		trackDistance = 7;
 	}
 	
-	public int getHillValue(float distanceValue)
-	{
-		return 20;
-		
-		
-	}
 	
-	public float getTurnValue(float distanceValue)
+	public void setValues(int distanceValue)
 	{
 		double mileValue = (distanceValue/5280)%trackDistance;
 		
@@ -45,7 +44,11 @@ public class Track
 			TrackPoint TP = trackPoints.get(i);
 			
 			if(mileValue == TP.mileVal)
-				return TP.turnVal;
+			{
+				this.turnVal = TP.turnVal;
+				this.hillVal = TP.hillVal;
+				return;
+			}
 			
 			
 			else if(mileValue < TP.mileVal)  //this is the first track point you havent reached yet
@@ -55,14 +58,15 @@ public class Track
 				double mileDiff = TP.mileVal - TP_Prev.mileVal;
 				double mileAlleg = (mileValue - TP_Prev.mileVal)/mileDiff;  //from 0 to 1 based on how close to each track point
 				
-				float returner = (float)((TP_Prev.turnVal*(1-mileAlleg))+(TP.turnVal*mileAlleg));
+				this.turnVal = (float)((TP_Prev.turnVal*(1-mileAlleg))+(TP.turnVal*mileAlleg));
+				this.hillVal = (int)((TP_Prev.hillVal*(1-mileAlleg))+(TP.hillVal*mileAlleg));
 				
-				return returner;
+				return;
 				
 			}
 		}
 		
-		return 0;  //returns 0 if the loop fails to get a return [it shouldn't ever get here if it works]
+		return;  //returns if the loop fails to get a return [it shouldn't ever get here if it works]
 	}
 	
 

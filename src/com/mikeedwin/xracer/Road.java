@@ -161,8 +161,8 @@ public class Road {
     {
     	pth2 = new Path();
     	pth2.moveTo(roadBL_X,roadBL_Y);
-        pth2.cubicTo(roadBL_X,roadBL_Y, roadLbez_X, roadLbez_Y, roadTL_X,roadTL_Y);
-        pth2.moveTo(roadTR_X, roadTR_Y);
+        pth2.cubicTo(roadLbez_X, roadLbez_Y, roadTL_X,roadTL_Y, (roadTL_X+20), (roadTL_Y-20));
+        pth2.moveTo(roadTR_X+20, roadTR_Y-20);
         pth2.cubicTo(roadTR_X, roadTR_Y, roadRbez_X, roadRbez_Y, roadBR_X,roadBR_Y);
         p.setColor(0xFFCCCBCC);
         p.setStyle(Paint.Style.STROKE);
