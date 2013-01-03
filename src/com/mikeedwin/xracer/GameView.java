@@ -7,6 +7,7 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -36,8 +37,8 @@ public class GameView extends SurfaceView implements SensorEventListener {
     private int viewHeight;
     private Random rand;
     private List<Cloud> clouds = new ArrayList<Cloud>();
-    private int speed = 0;  // Current speed in mph
-    private int distance = 0;  // Total distance travelled
+    private int speed = 0;  // Current speed in MPH
+    private float distance = 0;  // Total distance traveled
     private int score = 0;  //total score = distance * (5 * floor(speed/250)) can be changed
     private Timer T;
     private Bitmap speedometerBitmap;
@@ -46,6 +47,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
     private Bitmap bmpBike;
     private Bike bike;
     private int turn;
+    private int time = 0; // In seconds
     
     // TEST TIMER
     private RefreshHandler mRedrawHandler = new RefreshHandler();
@@ -89,19 +91,28 @@ public class GameView extends SurfaceView implements SensorEventListener {
                }
         });
         
+        // LOADING BITMAPS
         Bitmap carbitmap = BitmapFactory.decodeResource(getResources(), R.drawable.car);
         speedometerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.speedometer);
         Bitmap treeBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.tree);
         Bitmap bmpBike = BitmapFactory.decodeResource(getResources(), R.drawable.bike);
-
+        
+        // INITIALIZING OBJECTS
+        
+        // SKY
         sky = new Sky(viewWidth, viewHeight);
         
-        // Clouds
+        // CLOUDS
         for(int i = 0; i < 20; i++){
         	Cloud cloud = new Cloud(viewWidth, viewHeight);
         	clouds.add(cloud);
         }
         
+        
+        // LET ME KNOW IF THIS IS OK TO REMOVE 
+        // WE DON"T NEET IT
+        
+        // *******************
         T = new Timer();
         TimerTask task = new TimerTask(){
         	@Override
@@ -110,26 +121,23 @@ public class GameView extends SurfaceView implements SensorEventListener {
         }};
         
         T.scheduleAtFixedRate(task, 1000, 1000);  
-        speed = 0;
-        score = 0;
+        // **************************
         
+        // CAR
         racecar = new Car(carbitmap, viewWidth, viewHeight);
+        // ROAD
         road = new Road(treeBitmap, viewWidth, viewHeight);
-        rand = new Random();
-        
-        //track
+        // TRACK
         track = new Track();
-        
         // Bike
-        
         bike = new Bike(bmpBike, viewWidth, viewHeight);
-        
         // HUD
         hud = new Hud(viewWidth, viewHeight, speedometerBitmap);
-       
-        start();
+
+        rand = new Random();
         
-        updateUI();
+        start();
+        updateDistSpeedScore();
 	}
 
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -162,9 +170,10 @@ public class GameView extends SurfaceView implements SensorEventListener {
     protected void onDraw(Canvas canvas) {
 		movecar();
 		adjustroad();
-		updateDistSpeedScore();
-
+		
+		// GAME BACKGROUND
 		canvas.drawColor(Color.rgb(30, 151, 220));
+		
 		sky.onDraw(canvas);
 
 		for (Cloud cloud : clouds) {
@@ -177,7 +186,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
 		road.onDraw(canvas);
 		racecar.onDraw(canvas);
 		bike.onDraw(canvas, turn);
-		hud.onDraw(canvas, speed, score);
+		hud.onDraw(canvas, speed, score, time, distance);
 		
 		
 		framecount++;
@@ -212,48 +221,44 @@ public class GameView extends SurfaceView implements SensorEventListener {
 	
 	// TIMER 
 	
+  @SuppressLint("HandlerLeak")
   class RefreshHandler extends Handler {
-    @Override
-    public void handleMessage(Message msg) {
-      GameView.this.updateUI();
-    }
+	  @Override
+	  public void handleMessage(Message msg) {
+		  GameView.this.updateDistSpeedScore();
+	  }
 
-    public void sleep(long delayMillis) {
-      this.removeMessages(0);
-      sendMessageDelayed(obtainMessage(0), delayMillis);
-    }
+	  public void sleep(long delayMillis) {
+		  this.removeMessages(0);
+		  sendMessageDelayed(obtainMessage(0), delayMillis);
+	  }
   };
 
-  private void updateUI(){
-    int currentInt = framecount + 10;
-    if(currentInt <= 100){
-      mRedrawHandler.sleep(1000);
-      
-      // Update variables here
-      updateDistSpeedScore();
-      
-    }
-  }
-  
   private void updateDistSpeedScore(){
-		// TODO: Increase distance by depending on speed and time.
-		distance+= 50;
-		// TODO: Increase speed depending on how fast we want the game to go.
-		speed++;
-		// TODO: Fix the score counter
-		//score = (int) (distance * (5 * (Math.floor(speed/255))));
-		score = score + 20;
-	}
-	
-	// FUNCTIONS THAT UPDATE SPEED AND DISTANCE 
-	
-	public void updateSpeedDistScore(){
-		// Update Speed
-		
-		// Update Distance
-		
-		// Update Score
-	}
-  
+	  mRedrawHandler.sleep(1000);
+  		
+	  time++;
+	  
+	  if(speed >= 0 && speed < 50){
+		  speed += 5;
+	  }else if(speed >= 50 && speed < 100){
+		  int divisibleByTwo = time % 2;
+		  if(divisibleByTwo == 0){
+			  speed++;
+		  }
+	  }else if(speed >= 100 && speed < 160){
+		  int divisibleByFive = time % 5;
+		  if(divisibleByFive == 0){
+			  speed++;
+		  }
+	  }else{
+		  speed = 160;
+	  }
+
+	  // Distance in feet
+	  distance = speed * (5280/3600) * time;
+	  
+	  score = (int) Math.floor(distance * 100); // 100 points per 1mile
+  }
 	
 }

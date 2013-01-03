@@ -19,11 +19,11 @@ public class Hud {
 	public Hud(int width, int height, Bitmap speedometerBitmap){
 		this.viewWidth = width;
 		this.viewHeight = height;
-		speedometer = speedometerBitmap;
+		this.speedometer = speedometerBitmap;
 	}
 	
 	@SuppressLint("DrawAllocation")
-	public void onDraw(Canvas canvas, int speed, int score) {
+	public void onDraw(Canvas canvas, int speed, int score, int time, float distance) {
 		this.score = score;
 		this.speed = speed;
 		
@@ -62,6 +62,12 @@ public class Hud {
 		needlePaint.setStrokeWidth(5);
 		canvas.drawLine(zeroReadingX, zeroReadingY, speedometerCenterX, speedometerCenterY, needlePaint);
 		
+		// TIME
+		canvas.drawText(Integer.toString(time), 200, 200, textPaint2);
+		// SPEED
+		canvas.drawText(Integer.toString(speed), 300, 200, textPaint2);
+		// DISTANCE
+		canvas.drawText(Float.toString(distance), 400, 200, textPaint2);
 		
 	}
 
