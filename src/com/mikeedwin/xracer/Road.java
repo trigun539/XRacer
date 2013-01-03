@@ -50,6 +50,7 @@ public class Road {
     
     private int roadline, roadlineGap, roadOffset;
     
+    private float nextTurnAdjuster = 0;
     
     public Road(Bitmap _treeBitmap, int vWidth, int vHeight){
     	this.viewHeight = vHeight;
@@ -95,6 +96,14 @@ public class Road {
         
         bezY_adj1 = (float)(Math.abs(turn)*-.05 + 2.5);  //3 on straight, .5 on full turn
         bezY_adj2 = (float)(Math.abs(turn)*.05 + 3.5);  //3 on straight, 5 on full turn
+        
+        //next turn road adjustment
+        
+        if(nextTurnDist >= .3)
+        	nextTurnAdjuster = nextTurn/nextTurnDist;
+        
+        else
+        	nextTurnAdjuster = nextTurn/(float)(0.3);
         
         //--left outer road line
         roadBL_X = ctrWidth-roadwidthFront/2 + road_lr;
@@ -166,8 +175,8 @@ public class Road {
     {
     	pth2 = new Path();
     	pth2.moveTo(roadBL_X,roadBL_Y);
-        pth2.cubicTo(roadLbez_X, roadLbez_Y, roadTL_X,roadTL_Y, (roadTL_X+20), (roadTL_Y-20));
-        pth2.moveTo(roadTR_X+20, roadTR_Y-20);
+        pth2.cubicTo(roadLbez_X, roadLbez_Y, roadTL_X,roadTL_Y, (roadTL_X+nextTurnAdjuster), (roadTL_Y-20));
+        pth2.moveTo(roadTR_X+nextTurnAdjuster, roadTR_Y-20);
         pth2.cubicTo(roadTR_X, roadTR_Y, roadRbez_X, roadRbez_Y, roadBR_X,roadBR_Y);
         p.setColor(0xFFCCCBCC);
         p.setStyle(Paint.Style.STROKE);
