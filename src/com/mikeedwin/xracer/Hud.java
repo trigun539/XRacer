@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Typeface;
 
 public class Hud {
@@ -46,6 +47,7 @@ public class Hud {
 		canvas.drawText(Integer.toString(score), 10, 110, textPaint2);
 		
 		// SPEDOMETER
+		/*
 		canvas.drawBitmap(speedometer, viewWidth - (speedometer.getWidth() + 10), viewHeight - (speedometer.getHeight() + 60) , null);
 		
 		int speedometerCenterX = viewWidth - (speedometer.getWidth() + 18)/2;
@@ -61,6 +63,45 @@ public class Hud {
 		needlePaint.setColor(Color.rgb(7, 155, 247));
 		needlePaint.setStrokeWidth(5);
 		canvas.drawLine(zeroReadingX, zeroReadingY, speedometerCenterX, speedometerCenterY, needlePaint);
+		*/
+		
+		
+		// SPEEDOMETER
+		
+		// Background Paint
+		Paint spdomtrBckgrndPt = new Paint();
+		// Background shape
+		spdomtrBckgrndPt.setAntiAlias(true);
+		spdomtrBckgrndPt.setColor(Color.BLACK);
+		spdomtrBckgrndPt.setStyle(Paint.Style.FILL); 
+		spdomtrBckgrndPt.setAlpha(100);
+		canvas.drawCircle(viewWidth - 130, viewHeight - 160, 70, spdomtrBckgrndPt);
+		canvas.drawRoundRect(new RectF(viewWidth - 130, viewHeight - 160, viewWidth - 60, viewHeight - 90), 5, 5, spdomtrBckgrndPt);
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		// TIME
 		canvas.drawText(Integer.toString(time), 200, 200, textPaint2);
@@ -68,6 +109,10 @@ public class Hud {
 		canvas.drawText(Integer.toString(speed), 300, 200, textPaint2);
 		// DISTANCE
 		canvas.drawText(Float.toString(distance), 400, 200, textPaint2);
+		
+		
+		
+		
 		
 	}
 
