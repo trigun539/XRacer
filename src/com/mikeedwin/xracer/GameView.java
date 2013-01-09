@@ -216,7 +216,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
 		road.hill = track.hillVal;
 		road.nextHill = track.nextHillVal;
 		road.nextTurn = track.nextTurnVal;
-		road.nextTurnDist = track.nextTurnDist;
+		road.turnChangeSpeed = track.turnChangeSpeed;
 	}
 	
 	// TIMER 
