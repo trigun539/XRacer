@@ -13,7 +13,8 @@ public class Track
 	public float hillVal = 0;
 	public float nextTurnVal = 0;
 	public float nextHillVal = 0;
-	public float nextTurnDist = 0;
+	public float turnChangeSpeed = 0;  //the rate at which the road is changing
+	public float distPastTrackPt = 0;  //distance driven past the last track point reached
 	
 	public Track() {
 		generateRandomTrack(20);
@@ -32,7 +33,7 @@ public class Track
 		{
 			dist += (Math.random() * 1.5)+.2;   //.2 to 1.7
 			turn = (int)((Math.random() * 100)-50);   //-50 to 50
-			hill = (int)((Math.random() * 30)-15);    //-15 to 15
+			hill = (int)((Math.random() * 30)-10);    //-10 to 20
 			
 			trackPoints.add(new TrackPoint(dist, hill, turn));
 		}
@@ -86,7 +87,9 @@ public class Track
 				this.hillVal = (float)((TP_Prev.hillVal*(1-mileAlleg))+(TP.hillVal*mileAlleg));
 				this.nextHillVal = TP.hillVal;
 				this.nextTurnVal = TP.turnVal;
-				this.nextTurnDist = (float)(TP.mileVal - mileValue);
+				float nextTurnDist = (float)(TP.mileVal - mileValue);
+				this.turnChangeSpeed = (nextTurnVal - turnVal)/nextTurnDist;
+				this.distPastTrackPt = (float)(mileValue - TP_Prev.mileVal);
 				
 				return 1;
 				
