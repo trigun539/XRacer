@@ -32,7 +32,7 @@ public class Track
 		for(int i=0; i<TrackPoints-1; i++)
 		{
 			dist += (Math.random() * 1.5)+.2;   //.2 to 1.7
-			turn = (int)((Math.random() * 100)-50);   //-50 to 50
+			turn = (int)((Math.random() * 70)-35);   //-35 to 35
 			hill = (int)((Math.random() * 30)-10);    //-10 to 20
 			
 			trackPoints.add(new TrackPoint(dist, hill, turn));

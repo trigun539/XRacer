@@ -108,6 +108,8 @@ public class Road {
         	nextTurnAdjuster = ((distPastTrackPt*5)*(turn+turnChangeSpeed)/(float)(viewWidth/250))   +   ((1-(distPastTrackPt*5))*(turn)/(float)(viewWidth/250));
         }
         
+        nextTurnAdjuster = 0;
+        
         
         //--left outer road line
         roadBL_X = ctrWidth-roadwidthFront/2 + road_lr;
@@ -173,8 +175,8 @@ public class Road {
     	pth = new Path();
     	pth.moveTo(roadBR_X,roadBR_Y);
         pth.lineTo(roadBL_X,roadBL_Y);
-        pth.cubicTo(roadBL_X,roadBL_Y, roadLbez_X, roadLbez_Y, roadML_X,roadML_Y);
-        pth.lineTo(roadMR_X, roadMR_Y);
+        pth.cubicTo(roadLbez_X, roadLbez_Y, roadML_X,roadML_Y, roadTL_X, roadTL_Y);
+        pth.lineTo(roadTR_X, roadTR_Y);
         pth.cubicTo(roadMR_X, roadMR_Y, roadRbez_X, roadRbez_Y, roadBR_X,roadBR_Y);
         pth.moveTo(roadBR_X,roadBR_Y);
         p.setColor(0xff999999);
@@ -185,8 +187,8 @@ public class Road {
     {
     	pth2 = new Path();
     	pth2.moveTo(roadBL_X,roadBL_Y);
-        pth2.cubicTo(roadLbez_X, roadLbez_Y, roadML_X,roadML_Y, roadTL_X, roadTL_Y);
-        pth2.moveTo(roadTR_X, roadTR_Y);
+        pth2.cubicTo(roadLbez_X, roadLbez_Y, roadML_X,roadML_Y, roadML_X,roadML_Y);
+        pth2.moveTo(roadMR_X,roadMR_Y);
         pth2.cubicTo(roadMR_X, roadMR_Y, roadRbez_X, roadRbez_Y, roadBR_X,roadBR_Y);
         p.setColor(0xFFCCCBCC);
         p.setStyle(Paint.Style.STROKE);
@@ -328,6 +330,10 @@ public class Road {
     		roadOffset += speed/4;
     	
     	currentSpeed = speed;
+    	
+    	float roadMovement = (speed * turn)/1200;
+    	
+    	road_leftright -= roadMovement;
     }
     	
     public void preventBoundaries()  //makes sure internal values don't exceed boundaries

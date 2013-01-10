@@ -22,7 +22,7 @@ public class Car {
     public int animationRow;
     public int x;
     public int y;
-    public int turn;  //-10 to 10, -10 is full left, 10 is full right, 0 is straight
+    public double turn;  //-10 to 10, -10 is full left, 10 is full right, 0 is straight
     
     public Car(Bitmap bmp, int vWidth, int vHeight){
         this.bmp = bmp;

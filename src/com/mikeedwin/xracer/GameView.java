@@ -46,7 +46,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
     private Track track;
     private Bitmap bmpBike;
     private Bike bike;
-    private int turn;
+    private double turn;
     private int time = 0; // In seconds
     
     // TEST TIMER
@@ -149,7 +149,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
 		racecar.x += 0;
 
 		int tilt = (int)event.values[1];
-		turn = (int) event.values[1];
+		turn = (double) event.values[1];
 		
 		if(tilt > 10)
 			tilt = 10;
@@ -185,7 +185,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
 		
 		road.onDraw(canvas);
 		racecar.onDraw(canvas);
-		bike.onDraw(canvas, turn);
+		bike.onDraw(canvas, (int)turn);
 		hud.onDraw(canvas, speed, score, time, distance);
 		
 		
@@ -198,7 +198,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
 		//road.road_leftright -= road.turn/20;
 		
 		//move car based on how it is turned
-		road.road_leftright += racecar.turn/4;
+		road.road_leftright += (float)racecar.turn*.3;
 		
 		road.moveCarForward(speed);
 	}
@@ -235,7 +235,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
   };
 
   private void updateDistSpeedScore(){
-	  mRedrawHandler.sleep(1000);
+	  mRedrawHandler.sleep(500);
   		
 	  time++;
 	  
