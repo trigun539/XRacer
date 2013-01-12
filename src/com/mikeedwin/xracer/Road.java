@@ -31,14 +31,15 @@ public class Road {
     
     private int roadwidthFront;
     private int roadwidthHorizon;
-    public int road_leftright = 0;  //-30 is a half view left, 30 is a half view right
+    public float road_leftright = 0;  //-30 is a half view left, 30 is a half view right
     private Paint p;
     private Path pth, pth2, pth3, pth4, pth5;
     private PathMeasure measure;
     private Bitmap treeBitmap;
     private int currentSpeed, offsetChange;
     
-    private int road_lr, ctrWidth, horizonHeight;
+    private float road_lr;
+    private int ctrWidth, horizonHeight;
     private float bezX_adj1, bezX_adj2, bezY_adj1, bezY_adj2;
     private float roadBL_X, roadBL_Y, roadML_X, roadML_Y, roadTL_X, roadTL_Y, roadLbez_X, roadLbez_Y;
     private float roadBR_X, roadBR_Y, roadMR_X, roadMR_Y, roadTR_X, roadTR_Y, roadRbez_X, roadRbez_Y;
@@ -327,11 +328,11 @@ public class Road {
     	}
     	
     	else
-    		roadOffset += speed/4;
+    		roadOffset += (viewWidth*speed)*.0008;
     	
     	currentSpeed = speed;
     	
-    	float roadMovement = (speed * turn)/1200;
+    	float roadMovement = (speed * turn)*(float).0012;
     	
     	road_leftright -= roadMovement;
     }
