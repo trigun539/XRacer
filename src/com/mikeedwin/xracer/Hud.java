@@ -1,6 +1,7 @@
 package com.mikeedwin.xracer;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -9,6 +10,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.util.DisplayMetrics;
 
 public class Hud {
 	private int score;
@@ -16,6 +18,8 @@ public class Hud {
 	private int viewWidth;
 	private int viewHeight;
 	private Bitmap speedometer;
+	private static DisplayMetrics metrics = null;
+	private static float density = 0;
 	
 	public Hud(int width, int height, Bitmap speedometerBitmap){
 		this.viewWidth = width;
@@ -27,6 +31,8 @@ public class Hud {
 	public void onDraw(Canvas canvas, int speed, int score, int time, double distance) {
 		this.score = score;
 		this.speed = speed;
+		
+		int scoreTextSize = (int) ((int) viewHeight * .1);
 		
 		// SCORE TEXT
 		Paint textPaint = new Paint();
@@ -80,29 +86,6 @@ public class Hud {
 		
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		// TIME
 		canvas.drawText(Integer.toString(time), 200, 200, textPaint2);
 		// SPEED
@@ -111,9 +94,7 @@ public class Hud {
 		canvas.drawText(Double.toString(distance), 400, 200, textPaint2);
 		
 		
-		
-		
-		
 	}
+	
 
 }

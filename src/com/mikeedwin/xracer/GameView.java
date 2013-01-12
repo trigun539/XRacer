@@ -213,8 +213,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
 		if(road.hill > 13)
 			road.hill = -13;
 		
-		float distanceForTrack = (float) distance;
-		track.setValues(distanceForTrack);
+		track.setValues((float) distance);
 		
 		road.turn = track.turnVal;
 		road.hill = track.hillVal;
