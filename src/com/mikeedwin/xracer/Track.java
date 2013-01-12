@@ -31,7 +31,7 @@ public class Track
 		
 		for(int i=0; i<TrackPoints-1; i++)
 		{
-			dist += (Math.random() * 1.5)+.2;   //.2 to 1.7
+			dist += (Math.random() * .5)+.1;   //.1 to .6
 			turn = (int)((Math.random() * 70)-35);   //-35 to 35
 			hill = (int)((Math.random() * 30)-10);    //-10 to 20
 			
