@@ -38,7 +38,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
     private Random rand;
     private List<Cloud> clouds = new ArrayList<Cloud>();
     private int speed = 0;  // Current speed in MPH
-    private float distance = 0;  // Total distance traveled
+    private double distance = 0;  // Total distance traveled
     private int score = 0;  //total score = distance * (5 * floor(speed/250)) can be changed
     private Timer T;
     private Bitmap speedometerBitmap;
@@ -59,6 +59,8 @@ public class GameView extends SurfaceView implements SensorEventListener {
 		mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
 	    mOrientation = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
 	    mSensorManager.registerListener(this, mOrientation, SensorManager.SENSOR_DELAY_NORMAL);
+	    
+	    setKeepScreenOn(true);
 	    
 	    DisplayMetrics metrics = context.getResources().getDisplayMetrics();
 	    viewWidth = metrics.widthPixels;
@@ -188,6 +190,8 @@ public class GameView extends SurfaceView implements SensorEventListener {
 		bike.onDraw(canvas, (int)turn);
 		hud.onDraw(canvas, speed, score, time, distance);
 		
+		// Distance in feet
+	    distance = speed * 0.00146667 * time;
 		
 		framecount++;
     }
@@ -209,8 +213,8 @@ public class GameView extends SurfaceView implements SensorEventListener {
 		if(road.hill > 13)
 			road.hill = -13;
 		
-		
-		track.setValues(distance);
+		float distanceForTrack = (float) distance;
+		track.setValues(distanceForTrack);
 		
 		road.turn = track.turnVal;
 		road.hill = track.hillVal;
@@ -235,7 +239,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
   };
 
   private void updateDistSpeedScore(){
-	  mRedrawHandler.sleep(500);
+	  mRedrawHandler.sleep(100);
   		
 	  time++;
 	  
@@ -254,9 +258,6 @@ public class GameView extends SurfaceView implements SensorEventListener {
 	  }else{
 		  speed = 160;
 	  }
-
-	  // Distance in feet
-	  distance = speed * (5280/3600) * time;
 	  
 	  score = (int) Math.floor(distance * 100); // 100 points per 1mile
   }
