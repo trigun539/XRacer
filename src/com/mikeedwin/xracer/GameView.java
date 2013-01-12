@@ -239,24 +239,16 @@ public class GameView extends SurfaceView implements SensorEventListener {
   };
 
   private void updateDistSpeedScore(){
-	  mRedrawHandler.sleep(100);
+	  mRedrawHandler.sleep(1);
   		
 	  time++;
 	  
-	  if(speed >= 0 && speed < 50){
-		  speed += 5;
-	  }else if(speed >= 50 && speed < 100){
-		  int divisibleByTwo = time % 2;
-		  if(divisibleByTwo == 0){
-			  speed++;
-		  }
-	  }else if(speed >= 100 && speed < 160){
-		  int divisibleByFive = time % 5;
-		  if(divisibleByFive == 0){
-			  speed++;
-		  }
-	  }else{
-		  speed = 160;
+	  speed = (int) Math.floor((Math.pow(time/1000, .4))*17);
+	  
+	  if(speed < 0){
+		  speed = 0;
+	  }else if(speed > 120){
+		  speed = 120;
 	  }
 	  
 	  score = (int) Math.floor(distance * 100); // 100 points per 1mile
