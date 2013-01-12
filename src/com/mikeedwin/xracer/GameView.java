@@ -243,7 +243,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
   		
 	  time++;
 	  
-	  speed = (int) Math.floor((Math.pow(time/1000, .4))*17);
+	  speed = (int) Math.floor((Math.pow((float)time/1000, .4))*17);
 	  
 	  if(speed < 0){
 		  speed = 0;
