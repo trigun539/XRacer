@@ -32,12 +32,10 @@ public class Hud {
 		this.score = score;
 		this.speed = speed;
 		
-		int scoreTextSize = (int) ((int) viewHeight * .1);
-		
 		// SCORE TEXT
 		Paint textPaint = new Paint();
 		textPaint.setColor(Color.rgb(24, 122, 150)); 
-		textPaint.setTextSize(80);
+		textPaint.setTextSize((int) Math.floor(viewHeight * 0.11111111));
 		textPaint.setTypeface(Typeface.SANS_SERIF);
 		// radius=10, x-offset=-2 y-offset=-2, color=black
 		textPaint.setShadowLayer(5.0f, -1.0f, -1.0f, Color.rgb(0, 0, 0));
@@ -46,7 +44,7 @@ public class Hud {
 		// ACTUAL SCORE
 		Paint textPaint2 = new Paint();
 		textPaint2.setColor(Color.rgb(255, 255, 255)); 
-		textPaint2.setTextSize(30);
+		textPaint2.setTextSize((int) Math.floor(viewHeight * 0.04166667));
 		textPaint2.setTypeface(Typeface.SANS_SERIF);
 		// radius=10, x-offset=-2 y-offset=-2, color=black
 		textPaint2.setShadowLayer(5.0f, -1.0f, -1.0f, Color.rgb(0, 0, 0));
@@ -92,6 +90,8 @@ public class Hud {
 		canvas.drawText(Integer.toString(speed), 300, 200, textPaint2);
 		// DISTANCE
 		canvas.drawText(Double.toString(distance), 400, 200, textPaint2);
+		// DEBUG
+		canvas.drawText(Integer.toString(viewHeight), 200, 250, textPaint2);
 		
 		
 	}
