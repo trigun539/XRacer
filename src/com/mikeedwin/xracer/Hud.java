@@ -39,7 +39,7 @@ public class Hud {
 		textPaint.setTypeface(Typeface.SANS_SERIF);
 		// radius=10, x-offset=-2 y-offset=-2, color=black
 		textPaint.setShadowLayer(5.0f, -1.0f, -1.0f, Color.rgb(0, 0, 0));
-		canvas.drawText("Score", 10, 70, textPaint);
+		canvas.drawText("Score", 10, (int) Math.floor(viewHeight * 0.09722222), textPaint);
 		
 		// ACTUAL SCORE
 		Paint textPaint2 = new Paint();
@@ -48,30 +48,9 @@ public class Hud {
 		textPaint2.setTypeface(Typeface.SANS_SERIF);
 		// radius=10, x-offset=-2 y-offset=-2, color=black
 		textPaint2.setShadowLayer(5.0f, -1.0f, -1.0f, Color.rgb(0, 0, 0));
-		canvas.drawText(Integer.toString(score), 10, 110, textPaint2);
-		
-		// SPEDOMETER
-		/*
-		canvas.drawBitmap(speedometer, viewWidth - (speedometer.getWidth() + 10), viewHeight - (speedometer.getHeight() + 60) , null);
-		
-		int speedometerCenterX = viewWidth - (speedometer.getWidth() + 18)/2;
-		int speedometerCenterY = viewHeight - (speedometer.getHeight() + 120)/2;
-		
-		// TODO: Draw Speedometer needle
-		
-		// WHEN SPEED IS 0
-		int zeroReadingX = speedometerCenterX - 40;
-		int zeroReadingY = speedometerCenterY + 35;
-		
-		Paint needlePaint = new Paint();
-		needlePaint.setColor(Color.rgb(7, 155, 247));
-		needlePaint.setStrokeWidth(5);
-		canvas.drawLine(zeroReadingX, zeroReadingY, speedometerCenterX, speedometerCenterY, needlePaint);
-		*/
-		
+		canvas.drawText(Integer.toString(score), 10, (int) Math.floor(viewHeight * 0.15277778), textPaint2);
 		
 		// SPEEDOMETER
-		
 		// Background Paint
 		Paint spdomtrBckgrndPt = new Paint();
 		// Background shape
@@ -83,6 +62,7 @@ public class Hud {
 		canvas.drawRoundRect(new RectF(viewWidth - 130, viewHeight - 160, viewWidth - 60, viewHeight - 90), 5, 5, spdomtrBckgrndPt);
 		
 		
+		// DEBUG INFO
 		
 		// TIME
 		canvas.drawText(Integer.toString(time), 200, 200, textPaint2);
@@ -92,9 +72,5 @@ public class Hud {
 		canvas.drawText(Double.toString(distance), 400, 200, textPaint2);
 		// DEBUG
 		canvas.drawText(Integer.toString(viewHeight), 200, 250, textPaint2);
-		
-		
-	}
-	
-
+	}	
 }
