@@ -24,13 +24,14 @@ public class Road {
     public float turn = 0;  //the turn of the road, -50 is hard left turn, 50 is hard right turn, 0 is straight
     public float nextTurn = 0;  //the next track point's turn
     public float turnChangeSpeed = 0;  //the rate at which the road is changing
-    public float distPastTrackPt = 0;  //distance driven past the last track point reached
+    public float distToNextTrackPt = 0;
     
     public float hill = 0; //-20 to 20, -20 is full downhill, 20 is full uphill
     public float nextHill = 0;  //the next track point's hill
     
     private int roadwidthFront;
     private int roadwidthHorizon;
+    private int roadwidthMid;
     public float road_leftright = 0;  //-30 is a half view left, 30 is a half view right
     private Paint p;
     private Path pth, pth2, pth3, pth4, pth5;
@@ -62,7 +63,6 @@ public class Road {
         treeList = new ArrayList<Tree>();
         
         roadwidthFront = (int)(viewWidth*.7);
-        roadwidthHorizon = (int)(viewWidth*.3);
         hill = -3;
         roadline = viewHeight/9;
         roadlineGap = viewHeight/9;
@@ -91,6 +91,7 @@ public class Road {
         ctrWidth = viewWidth/2;
         horizonHeight = (int)(viewHeight*(((float)hill/100) + .35));
         roadwidthHorizon = (int)(viewWidth*((float)hill/200 + .25));
+        roadwidthMid = (int)(roadwidthHorizon * 1.1);
         
         //bezier modifier variables, depending on turn strength
         bezX_adj1 = (float)(Math.abs(turn)*.03 + 2.5);  //2 on straight, 3.5 on full turn
@@ -101,28 +102,48 @@ public class Road {
         
         //next turn road adjustment
         
-        if(distPastTrackPt > .2)
-        	nextTurnAdjuster = (turn+turnChangeSpeed)/(float)(viewWidth/250);
+        float prevTurnAdjuster = nextTurnAdjuster;
         
-        else
+        float straightTurnAdjuster = turn/(float)(viewWidth*.001);  //sets the next turn adjuster to line up with current road
+       
+        
+        if(distToNextTrackPt >= .2)
+        	nextTurnAdjuster = straightTurnAdjuster;
+        
+        else if((distToNextTrackPt < .2)&&(distToNextTrackPt >= .1))
         {
-        	nextTurnAdjuster = ((distPastTrackPt*5)*(turn+turnChangeSpeed)/(float)(viewWidth/250))   +   ((1-(distPastTrackPt*5))*(turn)/(float)(viewWidth/250));
+        	float alleg = (float)((distToNextTrackPt-.1)*10); //=1 when dist is .2, =0 when dist is .1
+        	
+        	nextTurnAdjuster = (alleg*straightTurnAdjuster)   +   (1-alleg)*(turn+turnChangeSpeed)/(float)(viewWidth*.002);
+        }
+        else if((distToNextTrackPt < .1)&&(distToNextTrackPt >= 0))
+        {
+        	float alleg = (float)(distToNextTrackPt*10);
+        	
+        	nextTurnAdjuster = alleg*(turn+turnChangeSpeed)/(float)(viewWidth*.002)   +   (1-alleg)*nextTurn/(float)(viewWidth*.001);
         }
         
-        nextTurnAdjuster = 0;
+        
+        //prevent choppy next turns
+        if(nextTurnAdjuster > (prevTurnAdjuster+(viewWidth*.007)))
+        	nextTurnAdjuster = (float)(prevTurnAdjuster+(viewWidth*.007));
+        
+        else if(nextTurnAdjuster < (prevTurnAdjuster-(viewWidth*.007)))
+        	nextTurnAdjuster = (float)(prevTurnAdjuster-(viewWidth*.007));
+        
         
         
         //--left outer road line
         roadBL_X = ctrWidth-roadwidthFront/2 + road_lr;
         roadBL_Y = viewHeight;
 
-        roadML_X = ctrWidth + ((turn * viewWidth) /40) - roadwidthHorizon/2 + road_lr/3;
+        roadML_X = ctrWidth + ((turn * viewWidth) /40) - roadwidthMid/2 + road_lr/3;
         roadML_Y = horizonHeight;
         
-        roadTL_X = roadML_X + nextTurnAdjuster;
+        roadTL_X = roadML_X + nextTurnAdjuster + (roadwidthMid - roadwidthHorizon);
         roadTL_Y = roadML_Y - (viewHeight/16);
         
-        roadTR_X = roadMR_X + nextTurnAdjuster;
+        roadTR_X = roadMR_X + nextTurnAdjuster - (roadwidthMid - roadwidthHorizon);
         roadTR_Y = roadMR_Y - (viewHeight/16);
         
         roadLbez_X = ((roadBL_X*bezX_adj1)+(int)(roadML_X*bezX_adj2)) / 4;
@@ -132,7 +153,7 @@ public class Road {
         roadBR_X = ctrWidth+roadwidthFront/2 + road_lr;
         roadBR_Y = viewHeight;
 
-        roadMR_X = ctrWidth + ((turn * viewWidth) /40) + roadwidthHorizon/2 + road_lr/3;
+        roadMR_X = ctrWidth + ((turn * viewWidth) /40) + roadwidthMid/2 + road_lr/3;
         roadMR_Y = horizonHeight;
 
         roadRbez_X = ((roadBR_X*bezX_adj1)+(int)(roadMR_X*bezX_adj2)) / 4;  //3-1
@@ -158,16 +179,16 @@ public class Road {
         //----tree lines
         leftTreeLineBot_X = roadBL_X - roadwidthFront/3;
         leftTreeLineBot_Y = roadBL_Y;
-        leftTreeLineBez_X = roadLbez_X - (roadwidthFront/3 + roadwidthHorizon/3)/2;
+        leftTreeLineBez_X = roadLbez_X - (roadwidthFront/3 + roadwidthMid/3)/2;
         leftTreeLineBez_Y = roadLbez_Y;
-        leftTreeLineTop_X = roadML_X - roadwidthHorizon/3;
+        leftTreeLineTop_X = roadML_X - roadwidthMid/3;
         leftTreeLineTop_Y = roadML_Y;
         
         rightTreeLineBot_X = roadBR_X + roadwidthFront/3;
         rightTreeLineBot_Y = roadBR_Y;
-        rightTreeLineBez_X = roadRbez_X + (roadwidthFront/3 + roadwidthHorizon/3)/2;
+        rightTreeLineBez_X = roadRbez_X + (roadwidthFront/3 + roadwidthMid/3)/2;
         rightTreeLineBez_Y = roadRbez_Y;
-        rightTreeLineTop_X = roadMR_X + roadwidthHorizon/3;
+        rightTreeLineTop_X = roadMR_X + roadwidthMid/3;
         rightTreeLineTop_Y = roadMR_Y;
     }
     
@@ -188,8 +209,8 @@ public class Road {
     {
     	pth2 = new Path();
     	pth2.moveTo(roadBL_X,roadBL_Y);
-        pth2.cubicTo(roadLbez_X, roadLbez_Y, roadML_X,roadML_Y, roadML_X,roadML_Y);
-        pth2.moveTo(roadMR_X,roadMR_Y);
+        pth2.cubicTo(roadLbez_X, roadLbez_Y, roadML_X,roadML_Y, roadTL_X, roadTL_Y);
+        pth2.moveTo(roadTR_X, roadTR_Y);
         pth2.cubicTo(roadMR_X, roadMR_Y, roadRbez_X, roadRbez_Y, roadBR_X,roadBR_Y);
         p.setColor(0xFFCCCBCC);
         p.setStyle(Paint.Style.STROKE);
@@ -332,7 +353,7 @@ public class Road {
     	
     	currentSpeed = speed;
     	
-    	float roadMovement = (speed * turn)*(float).0012;
+    	float roadMovement = (speed * turn)*(float).002;
     	
     	road_leftright -= roadMovement;
     }

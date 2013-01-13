@@ -202,7 +202,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
 		//road.road_leftright -= road.turn/20;
 		
 		//move car based on how it is turned
-		road.road_leftright += (float)racecar.turn*.3;
+		road.road_leftright += (float)racecar.turn* Math.pow(speed, .8) * .014;
 		
 		road.moveCarForward(speed);
 	}
@@ -220,6 +220,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
 		road.nextHill = track.nextHillVal;
 		road.nextTurn = track.nextTurnVal;
 		road.turnChangeSpeed = track.turnChangeSpeed;
+		road.distToNextTrackPt = track.distToNextTrackPt;
 	}
 	
 	// TIMER 
@@ -238,9 +239,9 @@ public class GameView extends SurfaceView implements SensorEventListener {
   };
 
   private void updateDistSpeedScore(){
-	  mRedrawHandler.sleep(1);
+	  mRedrawHandler.sleep(10);
   		
-	  time++;
+	  time += 10;
 	  
 	  speed = (int) Math.floor((Math.pow((float)time/1000, .4))*17);
 	  
