@@ -28,7 +28,7 @@ public class Hud {
 	}
 	
 	@SuppressLint("DrawAllocation")
-	public void onDraw(Canvas canvas, int speed, int score, int time, double distance) {
+	public void onDraw(Canvas canvas, int speed, int score, int time, double distance, double turn) {
 		this.score = score;
 		this.speed = speed;
 		
@@ -72,5 +72,7 @@ public class Hud {
 		canvas.drawText(Double.toString(distance), 400, 200, textPaint2);
 		// DEBUG
 		canvas.drawText(Integer.toString(viewHeight), 200, 250, textPaint2);
+		// TURN
+		canvas.drawText(Double.toString(turn), 300, 250, textPaint2);
 	}	
 }

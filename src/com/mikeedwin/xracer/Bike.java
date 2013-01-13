@@ -33,7 +33,7 @@ public class Bike {
 		this.turnLevel = 0;
 	}
 	
-	public void update(int turn){
+	public void update(double turn){
 		
 		// TRANFORMING NUMBER TO SPRITE POSITION
 		turnLevel = (int) Math.floor(-(turn - 50)*0.1);
@@ -50,7 +50,7 @@ public class Bike {
 	}
 	
 	@SuppressLint({ "DrawAllocation", "DrawAllocation", "DrawAllocation" })
-    public void onDraw(Canvas canvas, int turn){
+    public void onDraw(Canvas canvas, double turn){
 		update(turn);
 		canvas.drawBitmap(bitmap, source, new Rect(x, y, x + bmpWidth, y + bmpHeight), null);
     }
