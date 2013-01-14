@@ -202,7 +202,8 @@ public class GameView extends SurfaceView implements SensorEventListener {
 		//road.road_leftright -= road.turn/20;
 		
 		//move car based on how it is turned
-		road.road_leftright += (float)racecar.turn* Math.pow(speed, .8) * .014;
+		//road.road_leftright += (float)racecar.turn* Math.pow(speed, .8) * .014;
+		road.road_leftright += (float)turn * Math.pow(speed, 0.8 ) * 0.005;
 		
 		road.moveCarForward(speed);
 	}
