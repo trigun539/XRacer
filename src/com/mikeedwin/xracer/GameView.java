@@ -48,6 +48,8 @@ public class GameView extends SurfaceView implements SensorEventListener {
     private Bike bike;
     private double turn;
     private int time = 0; // In seconds
+    private long StartTime; 
+    private long TimePaused; //milliseconds in which the game has been paused 
     
     // TEST TIMER
     private RefreshHandler mRedrawHandler = new RefreshHandler();
@@ -111,18 +113,10 @@ public class GameView extends SurfaceView implements SensorEventListener {
         }
         
         
-        // LET ME KNOW IF THIS IS OK TO REMOVE 
-        // WE DON"T NEET IT
         
-        // *******************
-        T = new Timer();
-        TimerTask task = new TimerTask(){
-        	@Override
-            public void run() {
-                //speed++;
-        }};
+        StartTime = System.currentTimeMillis();
         
-        T.scheduleAtFixedRate(task, 1000, 1000);  
+        
         // **************************
         
         // CAR
@@ -191,7 +185,9 @@ public class GameView extends SurfaceView implements SensorEventListener {
 		hud.onDraw(canvas, speed, score, time, distance, turn);
 		
 		// Distance in feet
-	    distance = speed * 0.00146667 * time;
+		
+		//distance function is broken, needs to be remade
+	    distance += (speed * 0.05);
 		
 		framecount++;
     }
@@ -203,7 +199,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
 		
 		//move car based on how it is turned
 		//road.road_leftright += (float)racecar.turn* Math.pow(speed, .8) * .014;
-		road.road_leftright += (float)turn * Math.pow(speed, 0.8 ) * 0.005;
+		road.road_leftright -= (float)turn * Math.pow(speed, 0.8 ) * 0.005;
 		
 		road.moveCarForward(speed);
 	}
@@ -241,8 +237,8 @@ public class GameView extends SurfaceView implements SensorEventListener {
 
   private void updateDistSpeedScore(){
 	  mRedrawHandler.sleep(10);
-  		
-	  time += 10;
+  		 
+	  time = (int)( System.currentTimeMillis() - StartTime);
 	  
 	  speed = (int) Math.floor((Math.pow((float)time/1000, .4))*17);
 	  
