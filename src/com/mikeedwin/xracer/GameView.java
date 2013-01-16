@@ -186,8 +186,6 @@ public class GameView extends SurfaceView implements SensorEventListener {
 		
 		// Distance in feet
 		
-		//distance function is broken, needs to be remade
-	    distance += (speed * 0.05);
 		
 		framecount++;
     }
@@ -238,9 +236,13 @@ public class GameView extends SurfaceView implements SensorEventListener {
   private void updateDistSpeedScore(){
 	  mRedrawHandler.sleep(10);
   		 
+	  long prevtime = time;
+	  
 	  time = (int)( System.currentTimeMillis() - StartTime);
 	  
 	  speed = (int) Math.floor((Math.pow((float)time/1000, .4))*17);
+	  
+	  distance += (time-prevtime)*(speed)*.0015;
 	  
 	  if(speed < 0){
 		  speed = 0;

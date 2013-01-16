@@ -40,13 +40,13 @@ public class Road {
     private int currentSpeed, offsetChange;
     
     private float road_lr;
-    private int ctrWidth, horizonHeight;
+    private int ctrWidth, horizonHeight, midHorizonHeight;
     private float bezX_adj1, bezX_adj2, bezY_adj1, bezY_adj2;
     private float roadBL_X, roadBL_Y, roadML_X, roadML_Y, roadTL_X, roadTL_Y, roadLbez_X, roadLbez_Y;
     private float roadBR_X, roadBR_Y, roadMR_X, roadMR_Y, roadTR_X, roadTR_Y, roadRbez_X, roadRbez_Y;
     
-    private float leftLineBot_X, leftLineBot_Y, leftLineBez_X, leftLineBez_Y, leftLineTop_X, leftLineTop_Y;
-    private float rightLineBot_X, rightLineBot_Y, rightLineBez_X, rightLineBez_Y, rightLineTop_X, rightLineTop_Y;
+    private float leftLineBot_X, leftLineBot_Y, leftLineBez_X, leftLineBez_Y, leftLineMid_X, leftLineMid_Y, leftLineTop_X, leftLineTop_Y;
+    private float rightLineBot_X, rightLineBot_Y, rightLineBez_X, rightLineBez_Y, rightLineMid_X, rightLineMid_Y, rightLineTop_X, rightLineTop_Y;
     
     private float leftTreeLineBot_X, leftTreeLineBot_Y, leftTreeLineBez_X, leftTreeLineBez_Y, leftTreeLineTop_X, leftTreeLineTop_Y;
     private float rightTreeLineBot_X, rightTreeLineBot_Y, rightTreeLineBez_X, rightTreeLineBez_Y, rightTreeLineTop_X, rightTreeLineTop_Y;
@@ -89,7 +89,8 @@ public class Road {
     	road_lr = (road_leftright * viewWidth / -60);
         
         ctrWidth = viewWidth/2;
-        horizonHeight = (int)(viewHeight*(((float)hill/100) + .35));
+        midHorizonHeight = (int)(viewHeight*(((float)hill/100) + .35));
+        horizonHeight = (int)(viewHeight*(((float)hill/100) + .35)) - (viewHeight/16);
         roadwidthHorizon = (int)(viewWidth*((float)hill/200 + .25));
         roadwidthMid = (int)(roadwidthHorizon * 1.1);
         
@@ -125,11 +126,11 @@ public class Road {
         
         
         //prevent choppy next turns
-        if(nextTurnAdjuster > (prevTurnAdjuster+(viewWidth*.007)))
-        	nextTurnAdjuster = (float)(prevTurnAdjuster+(viewWidth*.007));
+        if(nextTurnAdjuster > (prevTurnAdjuster+(viewWidth*.02)))
+        	nextTurnAdjuster = (float)(prevTurnAdjuster+(viewWidth*.02));
         
-        else if(nextTurnAdjuster < (prevTurnAdjuster-(viewWidth*.007)))
-        	nextTurnAdjuster = (float)(prevTurnAdjuster-(viewWidth*.007));
+        else if(nextTurnAdjuster < (prevTurnAdjuster-(viewWidth*.02)))
+        	nextTurnAdjuster = (float)(prevTurnAdjuster-(viewWidth*.02));
         
         
         
@@ -138,13 +139,13 @@ public class Road {
         roadBL_Y = viewHeight;
 
         roadML_X = ctrWidth + ((turn * viewWidth) /40) - roadwidthMid/2 + road_lr/3;
-        roadML_Y = horizonHeight;
+        roadML_Y = midHorizonHeight;
         
         roadTL_X = roadML_X + nextTurnAdjuster + (roadwidthMid - roadwidthHorizon);
-        roadTL_Y = roadML_Y - (viewHeight/16);
+        roadTL_Y = horizonHeight;
         
         roadTR_X = roadMR_X + nextTurnAdjuster - (roadwidthMid - roadwidthHorizon);
-        roadTR_Y = roadMR_Y - (viewHeight/16);
+        roadTR_Y = horizonHeight;
         
         roadLbez_X = ((roadBL_X*bezX_adj1)+(int)(roadML_X*bezX_adj2)) / 4;
         roadLbez_Y = ((roadBL_Y*bezY_adj1)+(int)(roadML_Y*bezY_adj2)) / 6;
@@ -154,7 +155,7 @@ public class Road {
         roadBR_Y = viewHeight;
 
         roadMR_X = ctrWidth + ((turn * viewWidth) /40) + roadwidthMid/2 + road_lr/3;
-        roadMR_Y = horizonHeight;
+        roadMR_Y = midHorizonHeight;
 
         roadRbez_X = ((roadBR_X*bezX_adj1)+(int)(roadMR_X*bezX_adj2)) / 4;  //3-1
         roadRbez_Y = ((roadBR_Y*bezY_adj1)+(int)(roadMR_Y*bezY_adj2)) / 6;  //1-5
@@ -165,15 +166,19 @@ public class Road {
         leftLineBot_Y = roadBL_Y;
         leftLineBez_X = (roadLbez_X * 2 + roadRbez_X)/3;
         leftLineBez_Y = (roadLbez_Y * 2 + roadRbez_Y)/3;
-        leftLineTop_X = (roadML_X * 2 + roadMR_X)/3; 
-        leftLineTop_Y = roadML_Y;
+        leftLineMid_X = (roadML_X * 2 + roadMR_X)/3; 
+        leftLineMid_Y = roadML_Y;
+        leftLineTop_X = (roadTL_X * 2 + roadTR_X)/3; 
+        leftLineTop_Y = horizonHeight;
         
         rightLineBot_X = (roadBL_X + roadBR_X * 2)/3;
         rightLineBot_Y = roadBL_Y;
         rightLineBez_X = (roadLbez_X + roadRbez_X * 2)/3;
         rightLineBez_Y = (roadLbez_Y + roadRbez_Y * 2)/3;
-        rightLineTop_X = (roadML_X + roadMR_X * 2)/3; 
-        rightLineTop_Y = roadML_Y;
+        rightLineMid_X = (roadML_X + roadMR_X * 2)/3; 
+        rightLineMid_Y = roadML_Y;
+        rightLineTop_X = (roadTL_X + roadTR_X * 2)/3; 
+        rightLineTop_Y = horizonHeight;
         
         
         //----tree lines
@@ -223,12 +228,12 @@ public class Road {
     {
     	pth3 = new Path();
     	pth3.moveTo(leftLineBot_X,leftLineBot_Y);
-        pth3.cubicTo(leftLineBot_X,leftLineBot_Y, leftLineBez_X, leftLineBez_Y, leftLineTop_X,leftLineTop_Y);
+        pth3.cubicTo(leftLineBez_X, leftLineBez_Y, leftLineMid_X,leftLineMid_Y, leftLineTop_X,leftLineTop_Y);
         pth3.moveTo(rightLineBot_X,rightLineBot_Y);
-        pth3.cubicTo(rightLineBot_X,rightLineBot_Y, rightLineBez_X, rightLineBez_Y, rightLineTop_X, rightLineTop_Y);
+        pth3.cubicTo(rightLineBez_X, rightLineBez_Y, rightLineMid_X, rightLineMid_Y, rightLineTop_X, rightLineTop_Y);
         p.setColor(0xFFCCCBCC);
         p.setStyle(Paint.Style.STROKE);
-        p.setStrokeWidth(5);
+        p.setStrokeWidth(4);
         p.setStrokeCap(Paint.Cap.SQUARE);
         p.setPathEffect(new DashPathEffect(new float[] {roadline,roadlineGap}, roadOffset));
         canvas.drawPath(pth3,p);
@@ -238,9 +243,9 @@ public class Road {
     {
     	pth3 = new Path();
     	pth3.moveTo(leftLineBot_X,leftLineBot_Y);
-        pth3.cubicTo(leftLineBot_X,leftLineBot_Y, leftLineBez_X, leftLineBez_Y, leftLineTop_X,leftLineTop_Y);
+        pth3.cubicTo(leftLineBez_X, leftLineBez_Y, leftLineMid_X,leftLineMid_Y, leftLineTop_X,leftLineTop_Y);
         pth3.moveTo(rightLineBot_X,rightLineBot_Y);
-        pth3.cubicTo(rightLineBot_X,rightLineBot_Y, rightLineBez_X, rightLineBez_Y, rightLineTop_X, rightLineTop_Y);
+        pth3.cubicTo(rightLineBot_X,rightLineBot_Y, rightLineBez_X, rightLineBez_Y, rightLineMid_X, rightLineMid_Y);
         p.setColor(0xCCCCCBCC);
         p.setStyle(Paint.Style.STROKE);
         p.setStrokeWidth(5);
@@ -250,9 +255,9 @@ public class Road {
         
         pth3 = new Path();
     	pth3.moveTo(leftLineBot_X,leftLineBot_Y);
-        pth3.cubicTo(leftLineBot_X,leftLineBot_Y, leftLineBez_X, leftLineBez_Y, leftLineTop_X,leftLineTop_Y);
+        pth3.cubicTo(leftLineBot_X,leftLineBot_Y, leftLineBez_X, leftLineBez_Y, leftLineMid_X,leftLineMid_Y);
         pth3.moveTo(rightLineBot_X,rightLineBot_Y);
-        pth3.cubicTo(rightLineBot_X,rightLineBot_Y, rightLineBez_X, rightLineBez_Y, rightLineTop_X, rightLineTop_Y);
+        pth3.cubicTo(rightLineBot_X,rightLineBot_Y, rightLineBez_X, rightLineBez_Y, rightLineMid_X, rightLineMid_Y);
         p.setColor(0x44CCCBCC);
         p.setStyle(Paint.Style.STROKE);
         p.setStrokeWidth(5);
@@ -342,14 +347,15 @@ public class Road {
     
     public void moveCarForward(int speed)  //moves the car forward [actually moves road] a certain amount depending on car speed
     {
-    	if((speed) > (roadline*5.2))  //if you are going very fast, turn on road blur mode
+    	double offsetChange = (viewWidth*speed)*.0008;
+    	
+    	if(offsetChange > roadline*1.25)
     	{
     		blurMode = true;
-    		roadOffset += roadline*1.3;
+    		roadOffset += roadline*1.25;
     	}
-    	
     	else
-    		roadOffset += (viewWidth*speed)*.0008;
+    		roadOffset += offsetChange;
     	
     	currentSpeed = speed;
     	
