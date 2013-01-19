@@ -245,7 +245,7 @@ public class Road {
     	pth3.moveTo(leftLineBot_X,leftLineBot_Y);
         pth3.cubicTo(leftLineBez_X, leftLineBez_Y, leftLineMid_X,leftLineMid_Y, leftLineTop_X,leftLineTop_Y);
         pth3.moveTo(rightLineBot_X,rightLineBot_Y);
-        pth3.cubicTo(rightLineBot_X,rightLineBot_Y, rightLineBez_X, rightLineBez_Y, rightLineMid_X, rightLineMid_Y);
+        pth3.cubicTo(rightLineBez_X, rightLineBez_Y, rightLineMid_X, rightLineMid_Y, rightLineTop_X, rightLineTop_Y);
         p.setColor(0xCCCCCBCC);
         p.setStyle(Paint.Style.STROKE);
         p.setStrokeWidth(5);

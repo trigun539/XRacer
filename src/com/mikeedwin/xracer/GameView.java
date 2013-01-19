@@ -9,6 +9,7 @@ import java.util.TimerTask;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -19,12 +20,15 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 public class GameView extends SurfaceView implements SensorEventListener {
 	
+	private SharedPreferences mySettings;
+	private Boolean tiltMode = true;
 	private SurfaceHolder holder;
 	private GameLoopThread gameLoopThread;
 	private Car racecar;
@@ -61,6 +65,10 @@ public class GameView extends SurfaceView implements SensorEventListener {
 		mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
 	    mOrientation = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
 	    mSensorManager.registerListener(this, mOrientation, SensorManager.SENSOR_DELAY_NORMAL);
+	    
+	    mySettings = PreferenceManager.getDefaultSharedPreferences(getContext());
+	    if(mySettings.getString("control_scheme", "").contains("On Screen"))
+	    	tiltMode = false;
 	    
 	    setKeepScreenOn(true);
 	    
@@ -250,6 +258,8 @@ public class GameView extends SurfaceView implements SensorEventListener {
 		  speed = 120;
 	  }
 	  
+	 
+		  
 	  score = (int) Math.floor(distance * 100); // 100 points per 1mile
   }
 	
