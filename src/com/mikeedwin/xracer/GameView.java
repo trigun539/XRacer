@@ -184,8 +184,11 @@ public class GameView extends SurfaceView implements SensorEventListener {
 			cloud.onDraw(canvas);
     	}
 		
-		if(framecount%50 == 21)   //creates a tree on the road every 50 frames
+		if(framecount%26 == 7)   //creates a tree on the left every 26 frames
 			road.makeTree(true);
+		
+		if(framecount%26 == 20)   //creates a tree on the right every 26 frames
+			road.makeTree(false);
 		
 		road.onDraw(canvas);
 		racecar.onDraw(canvas);

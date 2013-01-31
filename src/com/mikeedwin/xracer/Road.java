@@ -35,7 +35,7 @@ public class Road {
     public float road_leftright = 0;  //-30 is a half view left, 30 is a half view right
     private Paint p;
     private Path pth, pth2, pth3, pth4, pth5;
-    private PathMeasure measure;
+    private PathMeasure measureLeft, measureRight;
     private Bitmap treeBitmap;
     private int currentSpeed, offsetChange;
     
@@ -48,8 +48,8 @@ public class Road {
     private float leftLineBot_X, leftLineBot_Y, leftLineBez_X, leftLineBez_Y, leftLineMid_X, leftLineMid_Y, leftLineTop_X, leftLineTop_Y;
     private float rightLineBot_X, rightLineBot_Y, rightLineBez_X, rightLineBez_Y, rightLineMid_X, rightLineMid_Y, rightLineTop_X, rightLineTop_Y;
     
-    private float leftTreeLineBot_X, leftTreeLineBot_Y, leftTreeLineBez_X, leftTreeLineBez_Y, leftTreeLineTop_X, leftTreeLineTop_Y;
-    private float rightTreeLineBot_X, rightTreeLineBot_Y, rightTreeLineBez_X, rightTreeLineBez_Y, rightTreeLineTop_X, rightTreeLineTop_Y;
+    private float leftTreeLineBot_X, leftTreeLineBot_Y, leftTreeLineBez_X, leftTreeLineBez_Y, leftTreeLineMid_X, leftTreeLineMid_Y, leftTreeLineTop_X, leftTreeLineTop_Y;
+    private float rightTreeLineBot_X, rightTreeLineBot_Y, rightTreeLineBez_X, rightTreeLineBez_Y, rightTreeLineMid_X, rightTreeLineMid_Y, rightTreeLineTop_X, rightTreeLineTop_Y;
     
     private int roadline, roadlineGap, roadOffset;
     
@@ -182,19 +182,23 @@ public class Road {
         
         
         //----tree lines
-        leftTreeLineBot_X = roadBL_X - roadwidthFront/3;
+        leftTreeLineBot_X = roadBL_X - roadwidthFront/4;
         leftTreeLineBot_Y = roadBL_Y;
-        leftTreeLineBez_X = roadLbez_X - (roadwidthFront/3 + roadwidthMid/3)/2;
+        leftTreeLineBez_X = roadLbez_X - (roadwidthFront/4 + roadwidthMid/4)/2;
         leftTreeLineBez_Y = roadLbez_Y;
-        leftTreeLineTop_X = roadML_X - roadwidthMid/3;
-        leftTreeLineTop_Y = roadML_Y;
+        leftTreeLineMid_X = roadML_X - roadwidthMid/4;
+        leftTreeLineMid_Y = roadML_Y;
+        leftTreeLineTop_X = roadTL_X - roadwidthHorizon/4;
+        leftTreeLineTop_Y = roadTL_Y;
         
-        rightTreeLineBot_X = roadBR_X + roadwidthFront/3;
+        rightTreeLineBot_X = roadBR_X + roadwidthFront/4;
         rightTreeLineBot_Y = roadBR_Y;
-        rightTreeLineBez_X = roadRbez_X + (roadwidthFront/3 + roadwidthMid/3)/2;
+        rightTreeLineBez_X = roadRbez_X + (roadwidthFront/4 + roadwidthMid/4)/2;
         rightTreeLineBez_Y = roadRbez_Y;
-        rightTreeLineTop_X = roadMR_X + roadwidthMid/3;
-        rightTreeLineTop_Y = roadMR_Y;
+        rightTreeLineMid_X = roadMR_X + roadwidthMid/4;
+        rightTreeLineMid_Y = roadMR_Y;
+        rightTreeLineTop_X = roadTR_X + roadwidthHorizon/4;
+        rightTreeLineTop_Y = roadTR_Y;
     }
     
     private void drawRoadBG(Canvas canvas)
@@ -272,20 +276,27 @@ public class Road {
     {
     	pth4 = new Path();
     	pth4.moveTo(leftTreeLineTop_X,leftTreeLineTop_Y);
-        pth4.cubicTo(leftTreeLineTop_X,leftTreeLineTop_Y, leftTreeLineBez_X,leftTreeLineBez_Y, leftTreeLineBot_X,leftTreeLineBot_Y);
+        pth4.cubicTo(leftTreeLineMid_X,leftTreeLineMid_Y, leftTreeLineBez_X,leftTreeLineBez_Y, leftTreeLineBot_X,leftTreeLineBot_Y);
         
         pth5 = new Path();
         pth5.moveTo(rightTreeLineTop_X,rightTreeLineTop_Y);
-        pth5.cubicTo(rightTreeLineTop_X,rightTreeLineTop_Y, rightTreeLineBez_X,rightTreeLineBez_Y, rightTreeLineBot_X,rightTreeLineBot_Y);
+        pth5.cubicTo(rightTreeLineMid_X,rightTreeLineMid_Y, rightTreeLineBez_X,rightTreeLineBez_Y, rightTreeLineBot_X,rightTreeLineBot_Y);
         
     }
     
+    
     private void moveAndDrawTrees(Canvas canvas)
     {
-    	measure = new PathMeasure();
-    	measure.setPath(pth4, false);
-        float[] xy = new float[2];
-        float pathlength = measure.getLength();
+    	measureLeft = new PathMeasure();
+    	measureLeft.setPath(pth4, false);
+    	measureRight = new PathMeasure();
+    	measureRight.setPath(pth5, false);
+    	
+        float[] xyLeft = new float[2];
+        int pathlengthLeft = (int)measureLeft.getLength();
+        float[] xyRight = new float[2];
+        int pathlengthRight = (int)measureRight.getLength();
+        
         
         Iterator<Tree> it = treeList.iterator();
         
@@ -294,32 +305,62 @@ public class Road {
         	
         	if(!tree.distanceSet)  //if tree distance not initialized yet, then initalize it
         	{
+        		if(tree.isLeft)
+        			tree.distance = pathlengthLeft;
         		
-        		tree.distance = (int)(pathlength);
+        		else
+        			tree.distance = pathlengthRight;
+        		
         		tree.distanceSet = true;
         	}
         	
-        	tree.distance -= 4;
-        	tree.offset = (int)(pathlength - tree.distance);
+        	//tree.offset = (int)(pathlength - tree.distance);
         	
-        	measure.getPosTan(tree.offset, xy, null);
-        	tree.x = (int)xy[0];
-        	tree.y = (int)xy[1];
-        	tree.distance = (int)(pathlength - tree.offset);
+        	
+        	if(tree.isLeft)
+        	{
+	        	measureLeft.getPosTan(tree.offset, xyLeft, null);
+	        	tree.x = (int)xyLeft[0];
+	        	tree.y = (int)xyLeft[1];
+	        	tree.distance = (pathlengthLeft - tree.offset);
+	        	tree.currentSize = xyLeft[1]/3;
+	        	
+	        	offsetChange = (this.currentSpeed * pathlengthLeft) / 2500;
+	        	
+	        	if(tree.distance < 250)
+	        		offsetChange = (int)(((this.currentSpeed * pathlengthLeft) / 2500) * (1+((tree.distance-250)*-.007)));
+	        	
+        	}
+        	else
+        	{
+	        	measureRight.getPosTan(tree.offset, xyRight, null);
+	        	tree.x = (int)xyRight[0];
+	        	tree.y = (int)xyRight[1];
+	        	tree.distance = (pathlengthRight - tree.offset);
+	        	tree.currentSize = xyRight[1]/3;
+	        	
+	        	offsetChange = (this.currentSpeed * pathlengthRight) / 2500;
+	        	
+	        	if(tree.distance < 250)
+	        		offsetChange = (int)(((this.currentSpeed * pathlengthRight) / 2500) * (1+((tree.distance-250)*-.007)));
+	        	
+        	}
+        	
+        	
         	if(tree.distance <= 0)
         		it.remove();
         	
         	
-        	offsetChange = this.currentSpeed / 16;
         	
-        	if(tree.distance < 200)
-        		offsetChange = (int)((this.currentSpeed / 16) * (1+((tree.distance-200)*-.0035)));
-        	
-        	tree.offset += 4;
+        	tree.offset += offsetChange;
         	
         	
-			tree.onDraw(canvas);
+			
         }
+        
+        for (Tree tree : treeList) {
+        	tree.onDraw(canvas);
+		}
     	
     }
     
@@ -381,7 +422,7 @@ public class Road {
     
     public void makeTree(boolean isLeft)
     {
-    	treeList.add(new Tree(treeBitmap, viewWidth, viewHeight));
+    	treeList.add(new Tree(treeBitmap, viewWidth, viewHeight, isLeft));
     }
     
 }
