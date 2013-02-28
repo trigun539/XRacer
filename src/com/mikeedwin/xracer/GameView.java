@@ -52,8 +52,9 @@ public class GameView extends SurfaceView implements SensorEventListener {
     private Bike bike;
     private double turn;
     private int time = 0; // In seconds
-    private long StartTime; 
+    private long StartTime;  //clock time when the game was first started
     private long TimePaused; //milliseconds in which the game has been paused 
+    private Boolean isPaused = false;
     
     // TEST TIMER
     private RefreshHandler mRedrawHandler = new RefreshHandler();
@@ -143,6 +144,14 @@ public class GameView extends SurfaceView implements SensorEventListener {
         start();
         updateDistSpeedScore();
 	}
+	
+	
+	public void pauseGame()
+	{
+		isPaused = true;
+		
+	}
+	
 
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 		// TODO Auto-generated method stub
@@ -235,7 +244,9 @@ public class GameView extends SurfaceView implements SensorEventListener {
   class RefreshHandler extends Handler {
 	  @Override
 	  public void handleMessage(Message msg) {
-		  GameView.this.updateDistSpeedScore();
+		  
+		  if(!isPaused)
+			  GameView.this.updateDistSpeedScore();
 	  }
 
 	  public void sleep(long delayMillis) {
@@ -249,7 +260,8 @@ public class GameView extends SurfaceView implements SensorEventListener {
   		 
 	  long prevtime = time;
 	  
-	  time = (int)( System.currentTimeMillis() - StartTime);
+	  
+	  time = (int)( System.currentTimeMillis() - StartTime - TimePaused);
 	  
 	  speed = (int) Math.floor((Math.pow((float)time/1000, .4))*17);
 	  
