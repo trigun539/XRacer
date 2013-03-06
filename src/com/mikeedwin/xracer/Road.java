@@ -25,6 +25,7 @@ public class Road {
     public float nextTurn = 0;  //the next track point's turn
     public float turnChangeSpeed = 0;  //the rate at which the road is changing
     public float distToNextTrackPt = 0;
+    public float compass;  //which way you are facing.  Goes from 0 [north] to 99 [50 is south]
     
     public float hill = 0; //-20 to 20, -20 is full downhill, 20 is full uphill
     public float nextHill = 0;  //the next track point's hill
@@ -37,7 +38,8 @@ public class Road {
     private Path pth, pth2, pth3, pth4, pth5;
     private PathMeasure measureLeft, measureRight;
     private Bitmap treeBitmap;
-    private int currentSpeed, offsetChange;
+    private int offsetChange;
+    private double distChange;
     
     private float road_lr;
     private int ctrWidth, horizonHeight, midHorizonHeight;
@@ -259,9 +261,9 @@ public class Road {
         
         pth3 = new Path();
     	pth3.moveTo(leftLineBot_X,leftLineBot_Y);
-        pth3.cubicTo(leftLineBot_X,leftLineBot_Y, leftLineBez_X, leftLineBez_Y, leftLineMid_X,leftLineMid_Y);
+        pth3.cubicTo(leftLineBez_X,leftLineBez_Y, leftLineMid_X, leftLineMid_Y, leftLineTop_X,leftLineTop_Y);
         pth3.moveTo(rightLineBot_X,rightLineBot_Y);
-        pth3.cubicTo(rightLineBot_X,rightLineBot_Y, rightLineBez_X, rightLineBez_Y, rightLineMid_X, rightLineMid_Y);
+        pth3.cubicTo(rightLineBez_X,rightLineBez_Y, rightLineMid_X, rightLineMid_Y, rightLineTop_X, rightLineTop_Y);
         p.setColor(0x44CCCBCC);
         p.setStyle(Paint.Style.STROKE);
         p.setStrokeWidth(5);
@@ -325,10 +327,10 @@ public class Road {
 	        	tree.distance = (pathlengthLeft - tree.offset);
 	        	tree.currentSize = xyLeft[1]/3;
 	        	
-	        	offsetChange = (this.currentSpeed * pathlengthLeft) / 2500;
+	        	offsetChange = (int)((this.distChange * pathlengthLeft) * .0268);
 	        	
 	        	if(tree.distance < 250)
-	        		offsetChange = (int)(((this.currentSpeed * pathlengthLeft) / 2500) * (1+((tree.distance-250)*-.007)));
+	        		offsetChange = (int)(((this.distChange * pathlengthLeft) * .0268) * (1+((tree.distance-250)*-.007)));
 	        	
         	}
         	else
@@ -339,10 +341,10 @@ public class Road {
 	        	tree.distance = (pathlengthRight - tree.offset);
 	        	tree.currentSize = xyRight[1]/3;
 	        	
-	        	offsetChange = (this.currentSpeed * pathlengthRight) / 2500;
+	        	offsetChange = (int)((this.distChange * pathlengthRight) * .0268);
 	        	
 	        	if(tree.distance < 250)
-	        		offsetChange = (int)(((this.currentSpeed * pathlengthRight) / 2500) * (1+((tree.distance-250)*-.007)));
+	        		offsetChange = (int)(((this.distChange * pathlengthRight) * .0268) * (1+((tree.distance-250)*-.007)));
 	        	
         	}
         	
@@ -386,9 +388,10 @@ public class Road {
         
     }
     
-    public void moveCarForward(int speed)  //moves the car forward [actually moves road] a certain amount depending on car speed
+    public void moveCarForward(double _distChange)  //moves the car forward [actually moves road] a certain amount depending on distance changed
     {
-    	double offsetChange = (viewWidth*speed)*.0008;
+    	double offsetChange = (viewWidth*distChange)*.053;  //.0008
+    	distChange = _distChange;
     	
     	if(offsetChange > roadline*1.25)
     	{
@@ -398,9 +401,8 @@ public class Road {
     	else
     		roadOffset += offsetChange;
     	
-    	currentSpeed = speed;
     	
-    	float roadMovement = (speed * turn)*(float).002;
+    	float roadMovement = ((float)distChange * turn)*(float).133;  //.002
     	
     	road_leftright -= roadMovement;
     }

@@ -22,6 +22,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -43,6 +44,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
     private List<Cloud> clouds = new ArrayList<Cloud>();
     private int speed = 0;  // Current speed in MPH
     private double distance = 0;  // Total distance traveled
+    private double distChanged = 0;  //distance changed since last frame
     private int score = 0;  //total score = distance * (5 * floor(speed/250)) can be changed
     private Timer T;
     private Bitmap speedometerBitmap;
@@ -109,25 +111,27 @@ public class GameView extends SurfaceView implements SensorEventListener {
         speedometerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.speedometer);
         Bitmap treeBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.tree);
         Bitmap bmpBike = BitmapFactory.decodeResource(getResources(), R.drawable.bike);
+        Bitmap skyBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sky360png);
         
         // INITIALIZING OBJECTS
         
         // SKY
-        sky = new Sky(viewWidth, viewHeight);
+        sky = new Sky(skyBitmap, viewWidth, viewHeight);
         
+        /*
         // CLOUDS
         for(int i = 0; i < 20; i++){
         	Cloud cloud = new Cloud(viewWidth, viewHeight);
         	clouds.add(cloud);
         }
+        */
         
-        
-        
+         
         StartTime = System.currentTimeMillis();
         
         
         // **************************
-        
+         
         // CAR
         racecar = new Car(carbitmap, viewWidth, viewHeight);
         // ROAD
@@ -187,11 +191,13 @@ public class GameView extends SurfaceView implements SensorEventListener {
 		// GAME BACKGROUND
 		canvas.drawColor(Color.rgb(30, 151, 220));
 		
-		sky.onDraw(canvas);
+		sky.onDraw(canvas, road.hill, road.compass);
 
+		/*
 		for (Cloud cloud : clouds) {
 			cloud.onDraw(canvas);
     	}
+    	*/
 		
 		if(framecount%26 == 7)   //creates a tree on the left every 26 frames
 			road.makeTree(true);
@@ -219,7 +225,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
 		//road.road_leftright += (float)racecar.turn* Math.pow(speed, .8) * .014;
 		road.road_leftright -= (float)turn * Math.pow(speed, 0.8 ) * 0.005;
 		
-		road.moveCarForward(speed);
+		road.moveCarForward(distChanged);
 	}
 	
 	private void adjustroad() {
@@ -261,11 +267,15 @@ public class GameView extends SurfaceView implements SensorEventListener {
 	  long prevtime = time;
 	  
 	  
+	  
 	  time = (int)( System.currentTimeMillis() - StartTime - TimePaused);
+	  long timepassed = time-prevtime;  //the time passed since the last draw frame
 	  
 	  speed = (int) Math.floor((Math.pow((float)time/1000, .4))*17);
 	  
-	  distance += (time-prevtime)*(speed)*.0015;
+	  distChanged = (timepassed)*(speed)*.0015;
+	  //Log.v('asd','test');
+	  distance += distChanged;
 	  
 	  if(speed < 0){
 		  speed = 0;
@@ -273,6 +283,15 @@ public class GameView extends SurfaceView implements SensorEventListener {
 		  speed = 120;
 	  }
 	  
+	  double newCompass = road.compass + (distChanged * road.turn*.002);
+	  
+	  if(newCompass > 100)
+		  newCompass -= 100;
+	  
+	  if(newCompass < 0)
+		  newCompass += 100;
+	  
+	  road.compass = (float)newCompass;
 	 
 		  
 	  score = (int) Math.floor(distance * 100); // 100 points per 1mile
