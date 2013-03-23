@@ -9,10 +9,13 @@ import android.annotation.SuppressLint;
 import android.graphics.AvoidXfermode;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.DashPathEffect;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PathMeasure;
+import android.graphics.Shader;
 
 public class Road {
 	private List<Tree> treeList;
@@ -80,8 +83,22 @@ public class Road {
     
     private void drawGround(Canvas canvas)
     {
-    	p.setColor(0xff005900);
+    	//p.setColor(0xff005900);
+    	p.setStyle(Paint.Style.FILL);
+    	int shaderColor0 = 0xff318C00;
+    	  int shaderColor1 = 0xff004600;
+    	p.setAntiAlias(true);
+    	
+    	Shader linearGradientShader = new LinearGradient(0, horizonHeight, viewWidth, viewHeight, 
+    		    shaderColor1, shaderColor0, Shader.TileMode.MIRROR);
+    	
+    	
+    	p.setShader(linearGradientShader);
+    	
+    	
         canvas.drawRect(0, horizonHeight, viewWidth, viewHeight, p);
+    	
+    	p.setShader(null);  //unsets the shader as gradients [so it doesnt draw the road as a gradient later]
     }
     
    

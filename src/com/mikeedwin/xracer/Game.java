@@ -1,5 +1,8 @@
 package com.mikeedwin.xracer;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -36,11 +39,13 @@ public class Game extends Activity {
 		
 		gameView.pauseGame();
 		
-
+		
+		
+		
 		
 		//-------- \/ Creating a notification so game can be resumed 
-		String ns = Context.NOTIFICATION_SERVICE;
-		NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
+		//String ns = Context.NOTIFICATION_SERVICE;
+		//mNotificationManager = (NotificationManager) getSystemService(ns);
       
 		int icon = R.drawable.bike;
 		Notification notification = new Notification(icon, "XRacer Paused" , (System.currentTimeMillis()));    
@@ -52,12 +57,27 @@ public class Game extends Activity {
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 		notification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
 
-		mNotificationManager.notify(0, notification);
+		notificationManager.notify(0, notification);
 		//-------- /\ Creating a notification so game can be resumed 
+		
+	
+		
+		TimerTask killMe = new TimerTask() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				notificationManager.cancel(0);
+				finish();
+			}
+		};
+		
+		
+		Timer killtimer = new Timer();
+		killtimer.schedule(killMe, 5000);
 		
 	}
 
-	
 	
 	
 }
