@@ -47,7 +47,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
     private double distChanged = 0;  //distance changed since last frame
     private int score = 0;  //total score = distance * (5 * floor(speed/250)) can be changed
     private Timer T;
-    private Bitmap speedometerBitmap;
+    
     private int framecount = 0;  //the number of total frames processed by the game, iterates every time ondraw is called
     private Track track;
     private Bitmap bmpBike;
@@ -108,10 +108,10 @@ public class GameView extends SurfaceView implements SensorEventListener {
         
         // LOADING BITMAPS
         Bitmap carbitmap = BitmapFactory.decodeResource(getResources(), R.drawable.car);
-        speedometerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.speedometer);
         Bitmap treeBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.tree);
         Bitmap bmpBike = BitmapFactory.decodeResource(getResources(), R.drawable.bike);
         Bitmap skyBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sky360png);
+        Bitmap speedometersBGBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.speedometer_background);
         
         // INITIALIZING OBJECTS
         
@@ -141,7 +141,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
         // Bike
         bike = new Bike(bmpBike, viewWidth, viewHeight);
         // HUD
-        hud = new Hud(viewWidth, viewHeight, speedometerBitmap);
+        hud = new Hud(viewWidth, viewHeight, speedometersBGBitmap);
 
         rand = new Random();
         

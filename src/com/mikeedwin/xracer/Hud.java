@@ -17,20 +17,21 @@ public class Hud {
 	private int speed;
 	private int viewWidth;
 	private int viewHeight;
-	private Bitmap speedometer;
+	private Bitmap speedometerBackground;
 	private static DisplayMetrics metrics = null;
 	private static float density = 0;
 	
 	public Hud(int width, int height, Bitmap speedometerBitmap){
 		this.viewWidth = width;
 		this.viewHeight = height;
-		this.speedometer = speedometerBitmap;
+		this.speedometerBackground = speedometerBitmap;
 	}
 	
 	@SuppressLint("DrawAllocation")
 	public void onDraw(Canvas canvas, int speed, int score, int time, double distance, double turn) {
 		this.score = score;
 		this.speed = speed;
+		this.speedometerBackground = speedometerBackground;
 		
 		// SCORE TEXT
 		Paint textPaint = new Paint();
@@ -52,14 +53,26 @@ public class Hud {
 		
 		// SPEEDOMETER
 		// Background Paint
-		Paint spdomtrBckgrndPt = new Paint();
+		//Paint spdomtrBckgrndPt = new Paint();
 		// Background shape
+		/*
 		spdomtrBckgrndPt.setAntiAlias(true);
 		spdomtrBckgrndPt.setColor(Color.BLACK);
 		spdomtrBckgrndPt.setStyle(Paint.Style.FILL); 
 		spdomtrBckgrndPt.setAlpha(100);
-		canvas.drawCircle(viewWidth - 130, viewHeight - 160, 70, spdomtrBckgrndPt);
-		canvas.drawRoundRect(new RectF(viewWidth - 130, viewHeight - 160, viewWidth - 60, viewHeight - 90), 5, 5, spdomtrBckgrndPt);
+		canvas.drawCircle(viewWidth - (float)(viewWidth * 0.1015625), viewHeight - (float)(viewWidth * 0.125), (int)(viewWidth * 0.0546875), spdomtrBckgrndPt);
+		canvas.drawRoundRect(new RectF(viewWidth - (float)(viewWidth * 0.1015625), 
+				viewHeight - (float)(viewWidth * 0.125), viewWidth - (int)(viewWidth * 0.046875), viewHeight - (int)(viewWidth * 0.0703125)), 5, 5, spdomtrBckgrndPt);
+		*/
+		
+		// Spedometer
+		// Background
+		//RectF src = new Rect(0, 0, speedometerBackground.getWidth(), speedometerBackground.getHeight());
+		RectF dst = new RectF((int)(viewWidth * 0.875), (int)(viewWidth * 0.3984375), (int)(viewWidth * 0.9921875), (int)(viewWidth * 0.515625));
+		canvas.drawBitmap(speedometerBackground, null, dst, null);
+		// SPEED
+		canvas.drawText(Integer.toString(speed), 1180, 600, textPaint2);
+		
 		
 		
 		// DEBUG INFO
@@ -74,5 +87,6 @@ public class Hud {
 		canvas.drawText(Integer.toString(viewHeight), 200, 250, textPaint2);
 		// TURN
 		canvas.drawText(Double.toString(turn), 300, 250, textPaint2);
+		
 	}	
 }
