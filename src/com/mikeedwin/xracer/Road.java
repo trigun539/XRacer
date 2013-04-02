@@ -89,7 +89,47 @@ public class Road {
     	  int shaderColor1 = 0xff004600;
     	p.setAntiAlias(true);
     	
-    	Shader linearGradientShader = new LinearGradient(0, horizonHeight, viewWidth, viewHeight, 
+    	
+    	int l,u,d,r;  //left, up, down, right
+    	
+    	float compassAdj = compass-70;  //adjust compass so top-left is 0
+    	if(compassAdj < 0)
+    		compassAdj += 100;
+    	
+    	if(compassAdj < 25)  //top quadrant
+    	{
+    		u = horizonHeight;
+    		d = viewHeight;
+    		
+    		r = (int)((compassAdj%25) * (viewWidth*.04)); 
+    		l = viewWidth - r;
+    	}
+    	else if(compassAdj < 50)  //left quadrant
+    	{
+    		l = 0;
+    		r = viewWidth;
+    		
+    		d = (int)((compassAdj%25) * (viewHeight*.04)); 
+    		u = viewHeight - d;
+    	}
+    	else if(compassAdj < 75)  //bottom quadrant
+    	{
+    		d = horizonHeight;
+    		u = viewHeight;
+    		
+    		l = (int)((compassAdj%25) * (viewWidth*.04)); 
+    		r = viewWidth - l;
+    	}
+    	else   //right quadrant
+    	{
+    		r = 0;
+    		l = viewWidth;
+    		
+    		u = (int)((compassAdj%25) * (viewHeight*.04)); 
+    		d = viewHeight - u;
+    	}
+    	
+    	Shader linearGradientShader = new LinearGradient(l, u, r, d, 
     		    shaderColor1, shaderColor0, Shader.TileMode.MIRROR);
     	
     	

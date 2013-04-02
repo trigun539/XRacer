@@ -208,7 +208,7 @@ public class GameView extends SurfaceView implements SensorEventListener {
 		road.onDraw(canvas);
 		racecar.onDraw(canvas);
 		bike.onDraw(canvas, turn);
-		hud.onDraw(canvas, speed, score, time, distance, turn);
+		hud.onDraw(canvas, (int)road.compass, score, time, distance, turn);
 		
 		// Distance in feet
 		

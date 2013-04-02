@@ -14,6 +14,7 @@ public class Sky {
 	private Bitmap skyBitmap;
 	private int skywidth;
 	private int skyheight;
+	private double yAdjuster;
 	private float skyX = 0;
 	private float skyY = 0;
 	
@@ -22,8 +23,12 @@ public class Sky {
 		viewHeight = height;
 		skyBitmap = bmp;
 		
-		skyheight = (int)((double)viewHeight * .49);
-		skywidth = skyheight * 8;
+		skywidth = viewWidth * 5;
+		skyheight = skywidth/8;
+		
+		yAdjuster = skyheight - ((double)viewHeight * .49);
+		//skyheight = (int)((double)viewHeight * .49);
+		//skywidth = skyheight * 8;
 	}
 	
 	public void update(){
@@ -41,7 +46,7 @@ public class Sky {
 		canvas.drawRect(0, 0, viewWidth, viewHeight, myPaint);
 		*/
 		
-		skyY = (float)(0 - ((roadhill-20) * -.008 * viewHeight));  //the sky image moves up 80% the amount the hill moves up
+		skyY = (float)(0 - ((roadhill-20) * -.008 * viewHeight) - yAdjuster);  //the sky image moves up 80% the amount the hill moves up
 		skyX = (float)(0 - (roadcompass * .005 * skywidth));
 		
 		RectF dst = new RectF(skyX, skyY, skywidth+skyX, skyheight+skyY);
