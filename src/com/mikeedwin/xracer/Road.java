@@ -60,6 +60,11 @@ public class Road {
     
     private float nextTurnAdjuster = 0;
     
+	int shaderColor0, shaderColor1, x1,y1,y2,x2, horizonDiff;
+	float compassAdj; 
+	
+	
+    
     public Road(Bitmap _treeBitmap, int vWidth, int vHeight){
     	this.viewHeight = vHeight;
         this.viewWidth = vWidth;
@@ -85,51 +90,52 @@ public class Road {
     {
     	//p.setColor(0xff005900);
     	p.setStyle(Paint.Style.FILL);
-    	int shaderColor0 = 0xff318C00;
-    	  int shaderColor1 = 0xff004600;
+    	shaderColor0 = 0xff318C00;
+    	shaderColor1 = 0xff004600;
     	p.setAntiAlias(true);
     	
     	
-    	int l,u,d,r;  //left, up, down, right
+    	horizonDiff = viewHeight - horizonHeight;
     	
-    	float compassAdj = compass-70;  //adjust compass so top-left is 0
+    	compassAdj = compass-70;  //adjust compass so top-left is 0
     	if(compassAdj < 0)
     		compassAdj += 100;
     	
+    	
     	if(compassAdj < 25)  //top quadrant
     	{
-    		u = horizonHeight;
-    		d = viewHeight;
+    		y1 = horizonHeight;
+    		y2 = viewHeight;
     		
-    		r = (int)((compassAdj%25) * (viewWidth*.04)); 
-    		l = viewWidth - r;
+    		x2 = (int)((compassAdj%25) * (viewWidth*.04)); 
+    		x1 = viewWidth - x2;
     	}
     	else if(compassAdj < 50)  //left quadrant
     	{
-    		l = 0;
-    		r = viewWidth;
+    		x1 = 0;
+    		x2 = viewWidth;
     		
-    		d = (int)((compassAdj%25) * (viewHeight*.04)); 
-    		u = viewHeight - d;
+    		y1 = (int)((compassAdj%25) * (horizonDiff*.04)) + horizonHeight; 
+    		y2 = viewHeight - y1 + horizonHeight;
     	}
     	else if(compassAdj < 75)  //bottom quadrant
     	{
-    		d = horizonHeight;
-    		u = viewHeight;
+    		y2 = horizonHeight;
+    		y1 = viewHeight;
     		
-    		l = (int)((compassAdj%25) * (viewWidth*.04)); 
-    		r = viewWidth - l;
+    		x1 = (int)((compassAdj%25) * (viewWidth*.04)); 
+    		x2 = viewWidth - x1;
     	}
     	else   //right quadrant
     	{
-    		r = 0;
-    		l = viewWidth;
+    		x2 = 0;
+    		x1 = viewWidth;
     		
-    		u = (int)((compassAdj%25) * (viewHeight*.04)); 
-    		d = viewHeight - u;
+    		y2 = (int)((compassAdj%25) * (horizonDiff*.04)) + horizonHeight; 
+    		y1 = viewHeight - y2 + horizonHeight;
     	}
     	
-    	Shader linearGradientShader = new LinearGradient(l, u, r, d, 
+    	Shader linearGradientShader = new LinearGradient(x1, y1, x2, y2, 
     		    shaderColor1, shaderColor0, Shader.TileMode.MIRROR);
     	
     	
@@ -283,7 +289,7 @@ public class Road {
         p.setColor(0xFFCCCBCC);
         p.setStyle(Paint.Style.STROKE);
         p.setStrokeWidth(5);
-        p.setStrokeCap(Paint.Cap.SQUARE);
+        p.setStrokeCap(Paint.Cap.BUTT);
         canvas.drawPath(pth2,p);
     }
     
@@ -297,7 +303,7 @@ public class Road {
         p.setColor(0xFFCCCBCC);
         p.setStyle(Paint.Style.STROKE);
         p.setStrokeWidth(4);
-        p.setStrokeCap(Paint.Cap.SQUARE);
+        p.setStrokeCap(Paint.Cap.BUTT);
         p.setPathEffect(new DashPathEffect(new float[] {roadline,roadlineGap}, roadOffset));
         canvas.drawPath(pth3,p);
     }
@@ -312,7 +318,7 @@ public class Road {
         p.setColor(0xCCCCCBCC);
         p.setStyle(Paint.Style.STROKE);
         p.setStrokeWidth(5);
-        p.setStrokeCap(Paint.Cap.SQUARE);
+        p.setStrokeCap(Paint.Cap.BUTT);
         p.setPathEffect(new DashPathEffect(new float[] {roadline,roadlineGap}, roadOffset));
         canvas.drawPath(pth3,p);
         

@@ -47,6 +47,7 @@ public class Sky {
 		*/
 		
 		skyY = (float)(0 - ((roadhill-20) * -.008 * viewHeight) - yAdjuster);  //the sky image moves up 80% the amount the hill moves up
+		//skyY = (float)(0 - yAdjuster);
 		skyX = (float)(0 - (roadcompass * .005 * skywidth));
 		
 		RectF dst = new RectF(skyX, skyY, skywidth+skyX, skyheight+skyY);

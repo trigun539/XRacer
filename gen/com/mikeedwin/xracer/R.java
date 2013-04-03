@@ -27,8 +27,8 @@ public final class R {
     public static final class id {
         public static final int Controls_onscreen=0x7f0a0004;
         public static final int Controls_tilt=0x7f0a0003;
-        public static final int menu_settings=0x7f0a0005;
-        public static final int quitOption=0x7f0a0006;
+        public static final int menu_settings=0x7f0a0006;
+        public static final int quitOption=0x7f0a0005;
         public static final int settingsButton=0x7f0a0002;
         public static final int startRaceButton=0x7f0a0001;
         public static final int test=0x7f0a0000;
@@ -38,8 +38,9 @@ public final class R {
         public static final int settings_layout=0x7f030001;
     }
     public static final class menu {
-        public static final int main_menu_layout=0x7f090000;
-        public static final int menu=0x7f090001;
+        public static final int ingame_menu=0x7f090000;
+        public static final int main_menu_layout=0x7f090001;
+        public static final int menu=0x7f090002;
     }
     public static final class raw {
         public static final int speedracer=0x7f050000;
